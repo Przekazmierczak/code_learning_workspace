@@ -13,13 +13,11 @@ def index():
         answers = []
         count = 15
         while count > 1:
-            new_answers = []
             with open(f"words/{count}-letter-words.json", encoding="utf-8") as file:
                 words = json.load(file)
                 for word in words:
                     checked_word = check_word(word['word'], array)
                     if checked_word is not None:
-                        answers.append(checked_word)
                         new_answers.append(checked_word)
             count = count - 1
         post = True
