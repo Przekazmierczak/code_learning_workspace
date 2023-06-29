@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <link href="/static/styles.css" rel="stylesheet">
+        <title>SpellCast Solver</title>
+        <script>
+            function change_color(id) {
+                document.getElementById(id).classList.add('red');
+            }
+            function change_color_back(id) {
+                document.getElementById(id).classList.remove('red');
+            }
+            function pick_word(answer) {
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach((element) => {
+                element.classList.remove('highlight_dark', 'highlight_light');
+                });
+                const str = answer;
+                const arr = JSON.parse(str);
+                document.getElementById(arr[0]).classList.add('highlight_dark')
+                for (let i = 1; i < (arr.length); i++) {
+                    document.getElementById(arr[i]).classList.add('highlight_light')
+                };
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h1>SpellCast Solver</h1>           
+                <form action="/" method="post">
+                    <table class="center">
+                            {% set count = namespace(value=1) %}
+                            {% for i in range(5) %}
+                            <tr class="letters">
+                                {% for i in range(5) %}
+                                    {% if post %}
+                                        <td  id = {{ count.value }} class="letters"><input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" value={{ letters_array[count.value - 1] }}></td>
+                                    {% else %}
+                                        <td class="letters"><input name={{ count.value }} placeholder= {{ count.value }} maxlength="1" size="1" autocomplete="off" type="text"></td>
+                                    {% endif %}
+                                {% set count.value = count.value + 1 %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                    </table>
+                    <p></p>
+                    <div class="center">
+                        <input name="test" type="hidden" value="15">
+                        <button id="findWords" type="submit" name="test" value="15">Find words</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="answer">
+                    {% set count = namespace(value=26) %}
+                    {% for answer in answers %}
+                        <span id= {{ count.value }} onclick="pick_word( '{{ answer[1] }}' )" onmouseenter="change_color('{{ count.value }}')" onmouseleave="change_color_back('{{ count.value }}')">{{ answer[0] }}, </span>
+                        {% set count.value = count.value + 1 %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,72 @@
+body {
+    background-image: url("https://i.ibb.co/M5Lc0Hx/background.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+input {
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    -webkit-text-stroke: 1px black;
+}
+h1 {
+    padding-top: 5vw;
+    color: purple;
+    text-align: center;
+    font-family: "Papyrus", monospace;
+    font-weight: bold;
+    font-size: 40px;
+    -webkit-text-stroke: 0.001px rgb(107, 213, 255);
+}
+.center {
+    width: 100px;
+    margin: auto;
+  }
+
+.letters {
+    width: 40vw;
+    min-width: 60px;
+    max-width: 500px;
+    height: auto;
+    padding-top: 8%;
+    padding-bottom: 8%;
+    text-align: center;
+    border-spacing: 60px;
+    border: 8px solid black;
+    outline: 1.5px solid blue;
+}
+.answer {
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+.red {
+    color: red;
+    cursor: pointer;
+}
+
+.highlight_dark {
+    background-color: red;
+}
+
+.highlight_light {
+    background-color: rgb(252, 123, 123);
+}
+
+button {
+    color: white;
+    font-size: 15.5px;
+    -webkit-text-stroke: 1px black;
+    font-weight: bold;
+    background-color: rgb(107, 213, 255);
+}
