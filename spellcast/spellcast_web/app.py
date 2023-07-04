@@ -1,5 +1,6 @@
 import json
 from flask import Flask, render_template, request
+# from threading import Thread
 
 app = Flask(__name__)
 
@@ -13,18 +14,25 @@ def index():
         answers = []
         count = 15
         while count > 1:
-            with open(f"words/{count}-letter-words.json", encoding="utf-8") as file:
-                words = json.load(file)
-                for word in words:
-                    checked_word = check_word(word['word'], array)
-                    if checked_word is not None:
-                        new_answers.append(checked_word)
+            file_name = f"words/{count}-letter-words.json"
+            answers.extend(check_file(file_name, array, answers))
             count = count - 1
+        
+        # threads = []
+        # for n in range(15, 1, -1):
+        #     file_name = f"words/{n}-letter-words.json"
+        #     t = Thread(target=check_file, args=(file_name, array, answers))
+        #     threads.append(t)
+        #     t.start()
+
+        # for t in threads:
+        #     t.join()
+        #     print(t.value)
+
         post = True
         return render_template("index.html", answers=answers,
                                post=post,
-                               letters_array=letters_array,
-                               count=count)
+                               letters_array=letters_array)
     return render_template("index.html")
 
 def get_array(array, letters_array):
@@ -38,6 +46,16 @@ def get_array(array, letters_array):
             letters_array.append(letter)
             counter += 1
         array.append(temp_array)
+
+def check_file(file_name, array, answers):
+    check_list = []
+    with open(file_name, encoding="utf-8") as file:
+        words = json.load(file)
+        for word in words:
+            checked_word = check_word(word['word'], array)
+            if checked_word is not None:
+                check_list.append(checked_word)
+    return check_list
 
 def check_word(word, array):
     word_array = []
@@ -100,3 +118,4 @@ def check_word(word, array):
                         return word, records
             column_number += 1
         row_number += 1
+
