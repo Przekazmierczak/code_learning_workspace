@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell
+{% endblock %}
+
+{% block main %}
+    <table class="center">
+        <tr>
+            <th>Symbol</th>
+            <th>Number of shares</th>
+            <th>Current Price</th>
+            <th>Total value</th>
+        </tr>
+        {% for table in tables %}
+        <tr>
+            <td>{{ table['symbol'] }}</td>
+            <td>{{ table['shares'] }}</td>
+            <td>{{ table['price'] }}</td>
+            <td>{{ table['total'] }}</td>
+            <form action="/sell" method="post">
+                <td>
+                    <input autocomplete="off" autofocus name="shares" placeholder="Number of shares" type="number" class="form-control mx-auto w-auto">
+                    <input name="symbol" type="hidden" value="{{ table['symbol'] }}">
+                </td>
+                <td>
+                    <button class="btn btn-primary" type="submit">Sell</button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+    <comment>{{ comment }}</comment>
+    <div>
+        Current cash balanc: {{ current_cash }}
+    </div>
+    <div>
+        Grand total: {{ grand_total }}
+    </div>
+{% endblock %}

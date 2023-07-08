@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <table class="center">
+        <tr>
+            <th>Date</th>
+            <th>Transction id</th>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Share</th>
+            <th>Balance</th>
+        </tr>
+        {% for table in tables %}
+        <tr>
+            <td>{{ table['date'] }}</td>
+            <td>{{ table['id'] }}</td>
+            <td>{{ table['symbol'] }}</td>
+            <td>{{ table['price'] }}</td>
+            <td>{{ table['shares'] }}</td>
+            <td>
+                <span style="color: green;"> {{ table['balance_sell'] }}</span>
+                <span style="color: red;"> {{ table['balance_buy'] }} </span>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+
+{% endblock %}
