@@ -1,3 +1,0 @@
-#Przemek
-
-Giga chad.
