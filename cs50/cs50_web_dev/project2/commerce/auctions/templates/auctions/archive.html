@@ -1,12 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Archive Listings</h2>
     {% for auction in auctions %}
-        {% if auction.active == True %}
+        {% if auction.active == False %}
             <ul class="listings">
                 <li>
-                    <div class="title"><b>Title:<a href="{% url 'auction' auction.id %}">{{ auction.auction_title }}</b></a></div>
+                    <div class="title"><b>Title: <a href="{% url 'auction' auction.id %}">{{ auction.auction_title }}</b></a></div>
                     <div class="categorie"><b>Categorie:</b> {{ auction.categorie }}</div>
                     <div class="owner"><b>Listing owner:</b> {{ auction.auction_user }}</div>
                     {% if auction.auction_picture %}
