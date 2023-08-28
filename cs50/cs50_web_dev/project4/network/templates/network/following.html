@@ -3,18 +3,16 @@
 
 {% block body %}
     {% csrf_token %}
-    <h2>All Posts</h2>
+    <h2>Following</h2>
     <!-- New post form -->
-    {% if user.is_authenticated %}
-        <form id="new_post" action="{% url 'new_post' %}" method="post">
-            {% csrf_token %}
-            <h4>New Post</h4>
-            <div>{{ form.post }}</div>
-            <input type="submit" class="btn btn-outline-primary" value="Post">
-        </form>
-    {% endif %}
-    
+    <form id="new_post" action="{% url 'new_post' %}" method="post">
+        {% csrf_token %}
+        <h4>New Post</h4>
+        <div>{{ form.post }}</div>
+        <input type="submit" class="btn btn-outline-primary" value="Post">
+    </form>
     <h3>Posts</h3>
+
     <!-- Post list -->
     {% for all_posts in page_obj %}
         <table>
@@ -27,13 +25,6 @@
                     <td class="post">
                         <!-- Post -->
                         <div id="post{{ all_posts.0.id }}">{{ all_posts.0.post }}</div>
-                        <!-- Edit button -->
-                        {% if user.is_authenticated %}
-                            {% if all_posts.0.user == request.user %}
-                                    <button id="edit{{ all_posts.0.id }}" class="edit_button btn btn-sm btn-outline-primary" data-id="{{ all_posts.0.id }}">Edit</button>
-                                    <button id="submit{{ all_posts.0.id }}" class="submit_button btn btn-sm btn-outline-primary" data-id="{{ all_posts.0.id }}">Save</button>
-                                {% endif %}
-                        {% endif %}
                     </td>
                 </tr>
                 <!-- Date -->
@@ -71,7 +62,7 @@
                     <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
-        </div>
+        </div>    
     </div>
 {% endblock %}
 

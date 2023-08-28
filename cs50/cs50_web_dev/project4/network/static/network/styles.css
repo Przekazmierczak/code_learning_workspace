@@ -1,0 +1,58 @@
+body {
+    padding: 1vw;
+}
+
+textarea {
+    width: 95%;
+    border-collapse: separate;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.301);
+    padding: 1vw;
+    margin: 1vh;
+}
+
+#new_post {
+    padding-left: 1vw;
+}
+
+table {
+    table-layout: fixed;
+    width: 95%;
+    border-collapse: separate;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.301);
+    padding: 1vw;
+    margin: 3vh;
+}
+
+th, tr, td {
+    table-layout: fixed;
+    width: 100%;
+    padding: 2px;
+}
+
+thead {
+    font-size: 22px;
+}
+
+.post {
+    min-height: 400px;
+}
+
+.date {
+    color: gray;
+}
+
+.likes_amount {
+    color: gray;
+}
+
+.center {
+    text-align: center;
+}
+
+.pagination {
+    font-size: 20px;
+    padding: 1vw;
+    display: inline-block;
+}
