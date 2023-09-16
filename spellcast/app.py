@@ -1,6 +1,5 @@
 import json
 from flask import Flask, render_template, request
-# from threading import Thread
 
 app = Flask(__name__)
 
@@ -12,22 +11,10 @@ def index():
         letters_array = []
         get_array(array, letters_array)
         answers = []
-        count = 15
-        while count > 1:
+        for count in range(15, 2, -1):
             file_name = f"words/{count}-letter-words.json"
-            answers.extend(check_file(file_name, array, answers))
+            answers.extend(check_file(file_name, array))
             count = count - 1
-        
-        # threads = []
-        # for n in range(15, 1, -1):
-        #     file_name = f"words/{n}-letter-words.json"
-        #     t = Thread(target=check_file, args=(file_name, array, answers))
-        #     threads.append(t)
-        #     t.start()
-
-        # for t in threads:
-        #     t.join()
-        #     print(t.value)
 
         post = True
         return render_template("index.html", answers=answers,
@@ -47,7 +34,7 @@ def get_array(array, letters_array):
             counter += 1
         array.append(temp_array)
 
-def check_file(file_name, array, answers):
+def check_file(file_name, array):
     check_list = []
     with open(file_name, encoding="utf-8") as file:
         words = json.load(file)
@@ -58,6 +45,7 @@ def check_file(file_name, array, answers):
     return check_list
 
 def check_word(word, array):
+    # Create list contained letters of checking word
     word_array = []
     for letter in word:
         word_array.extend(letter)
@@ -66,6 +54,7 @@ def check_word(word, array):
         column_number = 0
         for letter in array[row_number]:
             words_letter_number = [0]
+            
             if letter == word_array[0]:
                 # create locations[i] lists
                 for i in range(20):
@@ -73,8 +62,9 @@ def check_word(word, array):
                 # create records[i] lists - track already used letters
                 for i in range(20):
                     globals()[f'records{i}'] = []
+                
                 globals()[f'locations{words_letter_number[-1]}'] = [[row_number, column_number]]
-                # row and column are numbers showing locations of letters around checked letter
+                
                 while True:
                     if len(globals()[f'locations{words_letter_number[-1]}']) > 0:
                         for row in range(3):
@@ -83,39 +73,60 @@ def check_word(word, array):
                                 middle_condition = True
                                 if row == 1 and column == 1:
                                     middle_condition = False
-                                if (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) >= 0 and (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) < 5 and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) >= 0 and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) < 5:
-                                    if word_array[words_letter_number[-1]+1] == array[globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)][globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)] and middle_condition is True:
+                                if (
+                                (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) >= 0 
+                                and (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) < 5 
+                                and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) >= 0 
+                                and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) < 5
+                                ):
+                                    if (
+                                        word_array[words_letter_number[-1]+1] 
+                                        == array[globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)][globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)] 
+                                        and middle_condition is True
+                                    ):
                                         # prevent from using previous numbers
                                         previous_condition = True
                                         for i in range(len(words_letter_number) - 1):
-                                            if globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1) == globals()[f'records{i}'][0][0] and globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1) == globals()[f'records{i}'][0][1]:
+                                            if (
+                                            globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1) == globals()[f'records{i}'][0][0] 
+                                            and globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1) == globals()[f'records{i}'][0][1]
+                                            ):
                                                 previous_condition = False
+                                        
                                         if previous_condition is True:
                                             globals()[f'location{words_letter_number[-1] + 1}'] = []
                                             globals()[f'location{words_letter_number[-1] + 1}'].append(globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1))
                                             globals()[f'location{words_letter_number[-1] + 1}'].append(globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1))
                                             globals()[f'locations{words_letter_number[-1] + 1}'].append(globals()[f'location{words_letter_number[-1] + 1}'])
+                    
                     if len(globals()[f'locations{words_letter_number[-1]}']) > 0:
                         record = globals()[f'locations{words_letter_number[-1]}'].copy()
                         globals()[f'records{words_letter_number[-1]}'].insert(0, record[0])
                         globals()[f'locations{words_letter_number[-1]}'].pop(0)
+                    
                     if len(globals()[f'locations{words_letter_number[-1] + 1}']) > 0:
                         words_letter_number.append(words_letter_number[-1] + 1)
+                    
                     if len(globals()[f'locations{words_letter_number[-1]}']) == 0:
                         words_letter_number.pop()
+                    
                     if len(words_letter_number) == 0:
                         break
+                    
                     if len(words_letter_number) == len(word_array):
                         record = globals()[f'locations{words_letter_number[-1]}'].copy()
                         globals()[f'records{words_letter_number[-1]}'].extend(record)
                         records = []
+                        
                         for i in range(len(word_array)):
                             record = globals()[f'records{i}'][0]
                             # change record to numbers from 1 to 25
-                            record = record[0]*5 + record[1] + 1
+                            record = record[0] * 5 + record[1] + 1
                             records.append(record)
+                        
                         word = word.capitalize()
                         return word, records
+
             column_number += 1
         row_number += 1
 
