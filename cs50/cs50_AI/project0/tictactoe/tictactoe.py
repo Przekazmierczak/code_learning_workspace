@@ -110,30 +110,54 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    def max_values(state):
+    def max_values(state, list):
         v = float('-inf')
         if terminal(state):
             return utility(state)
+        # list recording previous v (for Alpha-beta pruning)
+        v_list = []
         for action in actions(state):
-            v = max(v, min_values(result(state, action)))
-            return v
+            flag = True
+            v = max(v, min_values(result(state, action), v_list))
+            # Alpha-beta pruning!
+            for value in list:
+                if value <= v:
+                    flag = False
+                    break
+            if flag == False:
+                break
+            v_list.append(v)
+        return v
 
-    def min_values(state):
+    def min_values(state, list):
         v = float('inf')
         if terminal(state):
             return utility(state)
+        # list recording previous v (for Alpha-beta pruning)
+        v_list = []
         for action in actions(state):
-            v = min(v, max_values(result(state, action)))
-            return v
+            flag = True
+            v = min(v, max_values(result(state, action), v_list))
+            # Alpha-beta pruning!
+            for value in list:
+                if value >= v:
+                    flag = False
+                    break
+            if flag == False:
+                break
+            v_list.append(v)
+        return v
 
     current_player = player(board)
     possible_actions = actions(board)
     actions_list = []
+    # list recording previous v (for Alpha-beta pruning) empty at the beginning
+    empty_list = []
     for possible_action in possible_actions:
         if current_player == X:
-            v = min_values(result(board, possible_action))
+            v = min_values(result(board, possible_action), empty_list)
         else:
-            v = max_values(result(board, possible_action))
+            v = max_values(result(board, possible_action), empty_list)
         actions_list.append([v, possible_action])
     if current_player == X:
         actions_list.sort(key=lambda x: x[0], reverse=True)
