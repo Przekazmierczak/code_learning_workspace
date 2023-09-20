@@ -14,7 +14,8 @@ CKnave = Symbol("C is a Knave")
 knowledge0 = And(
     Or(AKnight, AKnave),
     Not(And(AKnight, AKnave)),
-    Implication(AKnight, And(AKnight, AKnave))
+    Implication(And(AKnight, AKnave), AKnight),
+    Implication(Not(And(AKnight, AKnave)), AKnave),
 )
 
 # Puzzle 1
@@ -25,8 +26,9 @@ knowledge1 = And(
     Not(And(AKnight, AKnave)),
     Or(BKnight, BKnave),
     Not(And(BKnight, BKnave)),
-    Implication(AKnight, And(AKnave, BKnave)),
-    Implication(BKnave, And(AKnave, BKnave)),
+    Implication(And(AKnave, BKnave), AKnight),
+    Implication(Not(And(AKnave, BKnave)), AKnave),
+    Implication(Not(And(AKnave, BKnave)), BKnight),
 )
 
 # Puzzle 2
@@ -37,8 +39,10 @@ knowledge2 = And(
     Not(And(AKnight, AKnave)),
     Or(BKnight, BKnave),
     Not(And(BKnight, BKnave)),
-    Implication(AKnight, Or(And(AKnight, BKnight), And(AKnave, BKnave))),
-    Implication(BKnight, Or(And(AKnight, BKnave), And(AKnave, BKnight))),
+    Implication(Or(And(AKnight, BKnight), And(AKnave, BKnave)), AKnight),
+    Implication(Not(Or(And(AKnight, BKnight), And(AKnave, BKnave))), AKnave),
+    Implication(Or(And(AKnight, BKnave), And(AKnave, BKnight)), BKnight),
+    Implication(Not(Or(And(AKnight, BKnave), And(AKnave, BKnight))), BKnave),
 )
 
 # Puzzle 3
@@ -54,11 +58,14 @@ knowledge3 = And(
     Or(CKnight, CKnave),
     Not(And(CKnight, CKnave)),
     Implication(Or(AKnight, AKnave), AKnight),
-    Implication(AKnight, BKnave),
+    Implication(Not(Or(AKnight, AKnave)), AKnave),
+    Implication(And(AKnight, AKnave), BKnight),
+    Implication(Not(And(AKnight, AKnave)), BKnave),
     Implication(BKnight, CKnave),
+    Implication(BKnave, CKnight),
     Implication(CKnight, AKnight),
+    Implication(CKnave, AKnave),
 )
-
 
 def main():
     symbols = [AKnight, AKnave, BKnight, BKnave, CKnight, CKnave]
