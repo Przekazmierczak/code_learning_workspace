@@ -11,6 +11,12 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
+
+    # print(corpus)
+    # page = "2.html"
+    # model = transition_model(corpus, page, DAMPING)
+    # print(f"dict{model}")
+
     ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
     print(f"PageRank Results from Sampling (n = {SAMPLES})")
     for page in sorted(ranks):
@@ -57,7 +63,21 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    raise NotImplementedError
+    # prepare a dictionary and add chance, to every possible page, to be picked randomly in 1 - damping_factor situation
+    all_pages_dict = corpus.copy()
+    random_choose_chance = (1 - damping_factor) / len(all_pages_dict)
+    for key in all_pages_dict:
+        all_pages_dict[key] = random_choose_chance
+
+    # get all possible page's links
+    linked_pages_dict = corpus[page]
+
+    # add chance, to linked pages, to be picked in damping_factor situation
+    linked_choose_chance = damping_factor / len(linked_pages_dict)
+    for key in linked_pages_dict:
+        all_pages_dict[key] += linked_choose_chance
+
+    return all_pages_dict
 
 
 def sample_pagerank(corpus, damping_factor, n):
@@ -69,7 +89,22 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    # prepare empty dict
+    all_pages_dict = corpus.copy()
+    for key in all_pages_dict:
+        all_pages_dict[key] = 0
+
+    # get random page from corpus
+    page = random.choice(list(corpus.keys()))
+
+    # get page n times and add it to dictionary
+    for _ in range(n):
+        model = transition_model(corpus, page, damping_factor)
+        page = random.choices(list(model.keys()), list(model.values()))[0]
+        all_pages_dict[page] += 1 / n
+
+    return all_pages_dict
+
 
 
 def iterate_pagerank(corpus, damping_factor):
