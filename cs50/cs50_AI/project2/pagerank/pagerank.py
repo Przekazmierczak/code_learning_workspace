@@ -11,12 +11,6 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
-
-    # print(corpus)
-    # page = "2.html"
-    # model = transition_model(corpus, page, DAMPING)
-    # print(f"dict{model}")
-
     ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
     print(f"PageRank Results from Sampling (n = {SAMPLES})")
     for page in sorted(ranks):
@@ -63,19 +57,26 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    # prepare a dictionary and add chance, to every possible page, to be picked randomly in 1 - damping_factor situation
-    all_pages_dict = corpus.copy()
-    random_choose_chance = (1 - damping_factor) / len(all_pages_dict)
-    for key in all_pages_dict:
-        all_pages_dict[key] = random_choose_chance
-
     # get all possible page's links
     linked_pages_dict = corpus[page]
 
-    # add chance, to linked pages, to be picked in damping_factor situation
-    linked_choose_chance = damping_factor / len(linked_pages_dict)
-    for key in linked_pages_dict:
-        all_pages_dict[key] += linked_choose_chance
+    # prepare a dictionary
+    all_pages_dict = corpus.copy()
+
+    if len(linked_pages_dict) > 0:
+        # add chance, to every possible page, to be picked randomly in 1 - damping_factor situation
+        random_choose_chance = (1 - damping_factor) / len(all_pages_dict)
+        for key in all_pages_dict:
+            all_pages_dict[key] = random_choose_chance
+        # add chance, to linked pages, to be picked in damping_factor situation
+        linked_choose_chance = damping_factor / len(linked_pages_dict)
+        for key in linked_pages_dict:
+            all_pages_dict[key] += linked_choose_chance
+    else: 
+        # add chance, to every possible page, to be picked randomly if current page links not other page situation
+        random_choose_chance = 1 / len(all_pages_dict)
+        for key in all_pages_dict:
+            all_pages_dict[key] = random_choose_chance
 
     return all_pages_dict
 
@@ -116,7 +117,51 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    # get new dictionaries
+    all_pages_dict = corpus.copy()
+    new_ranking = corpus.copy()
+
+    # N - number of all pages
+    N = len(all_pages_dict)
+
+    # start by assuming the PageRank of every page is 1 / N
+    for key in all_pages_dict:
+        all_pages_dict[key] = 1 / N
+
+
+    while True:
+        # loop over all pages
+        for key_p in all_pages_dict:
+            # list with all pages_i that link to page_p
+            key_p_list = []
+            for key_i, value_i in corpus.items():
+                number_of_links = len(value_i)
+                # page that has no links interpreted as having one link for every page in the corpus
+                if number_of_links == 0:
+                    value = set()
+                    for page in all_pages_dict:
+                        value.add(page)
+                    key_p_list.append([key_i, value])
+                # page that has links
+                else:
+                    if key_p in corpus[key_i]:
+                        key_p_list.append([key_i, value_i])
+            # update ranking for page_p
+            new_ranking[key_p] = (1 - damping_factor) / N
+            for item in key_p_list:
+                new_ranking[key_p] += damping_factor * (all_pages_dict[item[0]] / len(item[1]))
+        
+        # check if PageRank value changes by more than 0.001
+        check_list = []
+        for page in all_pages_dict:
+            check = all_pages_dict[page] - new_ranking[page]
+            check_list.append(abs(check))
+        if max(check_list) <= 0.001:
+            return new_ranking
+
+        # update ranking after actual reiteration
+        all_pages_dict = new_ranking.copy()
+
 
 
 if __name__ == "__main__":
