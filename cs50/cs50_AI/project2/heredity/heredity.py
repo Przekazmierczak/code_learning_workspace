@@ -79,7 +79,7 @@ def main():
 
                 # Update probabilities with new joint probability
                 p = joint_probability(people, one_gene, two_genes, have_trait)
-                update(probabilities, one_gene, two_genes, have_trait, p)
+                # update(probabilities, one_gene, two_genes, have_trait, p)
 
     # Ensure probabilities sum to 1
     normalize(probabilities)
@@ -139,8 +139,88 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    raise NotImplementedError
+    joint_prob = 1
+    for person in people:
+        if person in one_gene:
+            person_gene = "one"
+        elif person in two_genes:
+            person_gene = "two"
+        else:
+            person_gene = "zero"
 
+        if people[person]["mother"] == None and people[person]["father"] == None:
+            if person_gene == "one":
+                gene_prob = PROBS["gene"][1]
+            if person_gene == "two":
+                gene_prob = PROBS["gene"][2]
+            if person_gene == "zero":
+                gene_prob = PROBS["gene"][0]
+        else:
+            mother = people[person]["mother"]
+            father = people[person]["father"]
+            if mother in one_gene or mother in two_genes:
+                if father in one_gene or father in two_genes:
+                    gene_prob_mother = 0.99
+                    gene_prob_not_mother = 0.01
+                    gene_prob_father = 0.99
+                    gene_prob_not_father = 0.01
+                    if person_gene == "one":
+                        gene_prob = gene_prob_mother * gene_prob_not_father + gene_prob_father * gene_prob_not_mother
+                    if person_gene == "two":
+                        gene_prob = gene_prob_mother * gene_prob_father
+                    if person_gene == "zero":
+                        gene_prob = gene_prob_not_mother * gene_prob_not_father
+                else:
+                    gene_prob_mother = 0.99
+                    gene_prob_not_mother = 0.01
+                    gene_prob_father = 0.01
+                    gene_prob_not_father = 0.99
+                    if person_gene == "one":
+                        gene_prob = gene_prob_mother * gene_prob_not_father + gene_prob_father * gene_prob_not_mother
+                    if person_gene == "two":
+                        gene_prob = gene_prob_mother * gene_prob_father
+                    if person_gene == "zero":
+                        gene_prob = gene_prob_not_mother * gene_prob_not_father
+            else:
+                if father in one_gene or father in two_genes:
+                    gene_prob_mother = 0.01
+                    gene_prob_not_mother = 0.99
+                    gene_prob_father = 0.99
+                    gene_prob_not_father = 0.01
+                    if person_gene == "one":
+                        gene_prob = gene_prob_mother * gene_prob_not_father + gene_prob_father * gene_prob_not_mother
+                    if person_gene == "two":
+                        gene_prob = gene_prob_mother * gene_prob_father
+                    if person_gene == "zero":
+                        gene_prob = gene_prob_not_mother * gene_prob_not_father
+                else:
+                    gene_prob_mother = 0.01
+                    gene_prob_not_mother = 0.99
+                    gene_prob_father = 0.01
+                    gene_prob_not_father = 0.99
+                    if person_gene == "one":
+                        gene_prob = gene_prob_mother * gene_prob_not_father + gene_prob_father * gene_prob_not_mother
+                    if person_gene == "two":
+                        gene_prob = gene_prob_mother * gene_prob_father
+                    if person_gene == "zero":
+                        gene_prob = gene_prob_not_mother * gene_prob_not_father
+        if person in have_trait:
+            if person_gene == "one":
+                trait_prob = PROBS["trait"][1][True]
+            if person_gene == "two":
+                trait_prob = PROBS["trait"][2][True]
+            if person_gene == "zero":
+                trait_prob = PROBS["trait"][0][True]
+        else:
+            if person_gene == "one":
+                trait_prob = PROBS["trait"][1][False]
+            if person_gene == "two":
+                trait_prob = PROBS["trait"][2][False]
+            if person_gene == "zero":
+                trait_prob = PROBS["trait"][0][False]
+        person_prob = gene_prob * trait_prob
+        joint_prob *= person_prob
+    return joint_prob
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
     """
