@@ -90,7 +90,9 @@ class CrosswordCreator():
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
+        # print(self.domains)
         self.ac3()
+        print(f"ac3{self.ac3()}")
         return self.backtrack(dict())
 
     def enforce_node_consistency(self):
@@ -99,7 +101,14 @@ class CrosswordCreator():
         (Remove any values that are inconsistent with a variable's unary
          constraints; in this case, the length of the word.)
         """
-        raise NotImplementedError
+        for variable in self.domains:
+            for word in self.domains[variable].copy():
+                if len(word) != variable.length:
+                    self.domains[variable].remove(word)
+        # print(self.domains[Variable(0, 1, 'across', 3)])
+        # print(self.domains[Variable(0, 1, 'down', 5)])
+
+        # print(self.revise(Variable(0, 1, 'across', 3), Variable(0, 1, 'down', 5)))
 
     def revise(self, x, y):
         """
@@ -110,7 +119,26 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        raise NotImplementedError
+        # print(x)
+        # print(y)
+        conflict = self.crossword.overlaps[x, y]
+        if conflict == None:
+            return False
+        revision = False
+        for word_x in self.domains[x].copy():
+            word_consist = False
+            for word_y in self.domains[y]:
+                if word_x[conflict[0]] == word_y[conflict[1]]:
+                    word_consist = True
+            if word_consist == False:
+                # print(word_x)
+                self.domains[x].remove(word_x)
+                revision = True
+        if revision == True:
+            return True
+        else:
+            return False
+        
 
     def ac3(self, arcs=None):
         """
@@ -121,8 +149,26 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
-        raise NotImplementedError
+        if arcs == None:
+            arcs = []
+        for variable1 in self.domains:
+            for variable2 in self.domains:
+                if variable1 != variable2:
+                    arcs.append((variable1, variable2))
+        # print(f"arcs{arcs}")
 
+        while arcs != []:
+            x, y = arcs.pop()
+            neighbors = self.crossword.neighbors(x)
+            if self.revise(x, y):
+                if len(self.domains[x]) == 0:
+                    return False
+                for var in neighbors:
+                    if var != y:
+                        # print(f"var{var}")
+                        arcs.append((var, x))
+        return True
+                
     def assignment_complete(self, assignment):
         """
         Return True if `assignment` is complete (i.e., assigns a value to each
