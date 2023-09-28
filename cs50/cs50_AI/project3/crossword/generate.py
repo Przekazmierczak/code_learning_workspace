@@ -179,10 +179,7 @@ class CrosswordCreator():
         for variable in self.domains:
             if variable not in assignment:
                 return False
-        # if self.consitent(assignment):    
-        #     return True
-        # else:
-        return False
+        return True
 
 
     def consistent(self, assignment):
@@ -245,7 +242,7 @@ class CrosswordCreator():
             if self.consistent(assignment):
                 assignment[var] = value
                 result = self.backtrack(assignment)
-                # print(assignment)
+                print(assignment)
                 if result != False:
                     return result
                 del assignment[var]
