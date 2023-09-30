@@ -90,10 +90,7 @@ class CrosswordCreator():
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
-        # print(self.domains)
         self.ac3()
-        # print(f"ac3{self.ac3()}")
-        # print(self.domains)
         print(self.backtrack(dict()))
         return self.backtrack(dict())
 
@@ -107,10 +104,6 @@ class CrosswordCreator():
             for word in self.domains[variable].copy():
                 if len(word) != variable.length:
                     self.domains[variable].remove(word)
-        # print(self.domains[Variable(0, 1, 'across', 3)])
-        # print(self.domains[Variable(0, 1, 'down', 5)])
-
-        # print(self.revise(Variable(0, 1, 'across', 3), Variable(0, 1, 'down', 5)))
 
     def revise(self, x, y):
         """
@@ -121,8 +114,6 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        # print(x)
-        # print(y)
         conflict = self.crossword.overlaps[x, y]
         if conflict == None:
             return False
@@ -133,7 +124,6 @@ class CrosswordCreator():
                 if word_x[conflict[0]] == word_y[conflict[1]]:
                     word_consist = True
             if word_consist == False:
-                # print(word_x)
                 self.domains[x].remove(word_x)
                 revision = True
         if revision == True:
@@ -151,13 +141,13 @@ class CrosswordCreator():
         Return True if arc consistency is enforced and no domains are empty;
         return False if one or more domains end up empty.
         """
+
         if arcs == None:
             arcs = []
-        for variable1 in self.domains:
-            for variable2 in self.domains:
-                if variable1 != variable2:
-                    arcs.append((variable1, variable2))
-        # print(f"arcs{arcs}")
+            for variable1 in self.domains:
+                for variable2 in self.domains:
+                    if variable1 != variable2:
+                        arcs.append((variable1, variable2))
 
         while arcs != []:
             x, y = arcs.pop()
@@ -167,7 +157,6 @@ class CrosswordCreator():
                     return False
                 for var in neighbors:
                     if var != y:
-                        # print(f"var{var}")
                         arcs.append((var, x))
         return True
                 
@@ -188,14 +177,12 @@ class CrosswordCreator():
         puzzle without conflicting characters); return False otherwise.
         """
         for variable in assignment:
-            if variable.length != len(assignment[variable]):
-                return False
-
+            # check if word was already used
             for variable2 in assignment:
                 if variable != variable2:
                     if assignment[variable] == assignment[variable2]:
                         return False
-
+            # check if word fit in crossword puzzle without conflicting characters
             neighbors = self.crossword.neighbors(variable)
             for neighbor in neighbors:
                 if neighbor in assignment:
@@ -212,7 +199,22 @@ class CrosswordCreator():
         The first value in the list, for example, should be the one
         that rules out the fewest values among the neighbors of `var`.
         """
-        return self.domains[var]
+        # create a new list where value is [value, number] pair - number: number of values they rule out
+        value_set = self.domains[var].copy()
+        ranking_list = list(value_set)
+        ranking_list = [[value, 0] for value in ranking_list]
+        # update the new list
+        neighbors = self.crossword.neighbors(var)
+        for neighbor in neighbors:
+            conflict = self.crossword.overlaps[var, neighbor]
+            for value in ranking_list:
+                for neighbor_value in self.domains[neighbor]:
+                    if value[0][conflict[0]] != neighbor_value[conflict[1]]:
+                        value[1] += 1
+        # sort the new list in ascending order of number
+        ranking_list = sorted(ranking_list, key=lambda x: x[1])
+
+        return [value[0] for value in ranking_list]
 
     def select_unassigned_variable(self, assignment):
         """
@@ -222,7 +224,7 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-
+        # create new variables list of tuples (variable, len(values), len(neighbors))
         variables = []
         values = []
         neighbors = []
@@ -230,7 +232,7 @@ class CrosswordCreator():
             variables.append(variable)
             values.append(len(self.domains[variable]))
             neighbors.append(len(self.crossword.neighbors(variable)))
-
+        # sort new variables
         sorted_variables = sorted(zip(variables, values, neighbors), key=lambda x: (x[1], -x[2]))
 
         for variable in sorted_variables:
@@ -283,7 +285,6 @@ def main():
         creator.print(assignment)
         if output:
             creator.save(assignment, output)
-
 
 if __name__ == "__main__":
     main()
