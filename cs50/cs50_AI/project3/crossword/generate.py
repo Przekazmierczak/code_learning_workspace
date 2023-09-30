@@ -222,9 +222,20 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
+
+        variables = []
+        values = []
+        neighbors = []
         for variable in self.domains:
-            if variable not in assignment:
-                return variable
+            variables.append(variable)
+            values.append(len(self.domains[variable]))
+            neighbors.append(len(self.crossword.neighbors(variable)))
+
+        sorted_variables = sorted(zip(variables, values, neighbors), key=lambda x: (x[1], -x[2]))
+
+        for variable in sorted_variables:
+            if variable[0] not in assignment:
+                return variable[0]
 
     def backtrack(self, assignment):
         """
@@ -239,13 +250,13 @@ class CrosswordCreator():
             return assignment
         var = self.select_unassigned_variable(assignment)
         for value in self.order_domain_values(var, assignment):
-            if self.consistent(assignment):
-                assignment[var] = value
-                result = self.backtrack(assignment)
-                print(assignment)
-                if result != False:
+            new_assignment = assignment.copy()
+            new_assignment[var] = value
+            if self.consistent(new_assignment):
+                result = self.backtrack(new_assignment)
+                if result:
                     return result
-                del assignment[var]
+                del new_assignment[var]
         return False
 
 
