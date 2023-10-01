@@ -60,7 +60,7 @@ def load_data(filename):
     is 1 if Revenue is true, and 0 otherwise.
     """
     # List of months and format
-    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     formats = [int, float, int, float, int, float, float, float, float, float, int, int, int, int, int, int, int, int]
     
     # Create list off all evidence and labels
@@ -88,7 +88,7 @@ def load_data(filename):
                     # Convert certain string values into integers
                     if element == "Returning_Visitor" or element == "TRUE":
                         row[index] = "1"
-                    elif element == "New_Visitor" or element == "FALSE":
+                    elif element == "New_Visitor" or element == "Other" or element == "FALSE":
                         row[index] = "0"
                     # Change the format of input
                     row[index] = formats[index](row[index])
@@ -103,7 +103,7 @@ def load_data(filename):
                 labels_list.append(labels_element)
     
     # Return a tuple containing the evidence and labels lists
-    return = (evidence_list, labels_list)
+    return (evidence_list, labels_list)
 
 
 def train_model(evidence, labels):
@@ -111,7 +111,8 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    model = KNeighborsClassifier(n_neighbors=1)
+    return model.fit(evidence, labels)
 
 
 def evaluate(labels, predictions):
@@ -129,7 +130,31 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    true_positive_true = []
+    true_positive_false = []
+    false_positive_true = []
+    false_positive_false = []
+
+    for count, element in enumerate(labels):
+        if element == True:
+            if element == predictions[count]:
+                true_positive_true.append(element)
+            else:
+                true_positive_false.append(element)
+        else:
+            if element == predictions[count]:
+                false_positive_true.append(element)
+            else:
+                false_positive_false.append(element)
+
+
+    true_sum = len(true_positive_true) + len(true_positive_false)
+    false_sum = len(false_positive_true) + len(false_positive_false)
+
+    true_positive_rate = len(true_positive_true) / true_sum
+    true_negative_rate = len(false_positive_true) / false_sum
+
+    return (true_positive_rate, true_negative_rate)
 
 
 if __name__ == "__main__":
