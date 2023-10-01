@@ -59,7 +59,51 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    # List of months and format
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    formats = [int, float, int, float, int, float, float, float, float, float, int, int, int, int, int, int, int, int]
+    
+    # Create list off all evidence and labels
+    evidence_list = []
+    labels_list = []
+    
+    # Open and read the CSV file
+    with open (filename, newline="") as csvfile:
+        reader = csv.reader(csvfile)
+        
+        # Iterate through rows in the CSV file
+        for count, row in enumerate(reader):
+            # Skip the first row (title row)
+            if count != 0:
+                # Create variables for evidence and labels for one user
+                evidence_element = []
+                labels_element = -1
+
+                # Iterate through elements in the row
+                for index, element in enumerate(row):
+                    # Change months into their numerical representation
+                    if element in months:
+                        month_index = months.index(element)
+                        row[index] = str(month_index)
+                    # Convert certain string values into integers
+                    if element == "Returning_Visitor" or element == "TRUE":
+                        row[index] = "1"
+                    elif element == "New_Visitor" or element == "FALSE":
+                        row[index] = "0"
+                    # Change the format of input
+                    row[index] = formats[index](row[index])
+                    # Add elements to the evidence or labels variable
+                    if index < 16:
+                        evidence_element.append(row[index])
+                    else:
+                        labels_element = row[index]
+                
+                # Add evidence and labels elements to the list of all evidences and labels
+                evidence_list.append(evidence_element)
+                labels_list.append(labels_element)
+    
+    # Return a tuple containing the evidence and labels lists
+    return = (evidence_list, labels_list)
 
 
 def train_model(evidence, labels):
