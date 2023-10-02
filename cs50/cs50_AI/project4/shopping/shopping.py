@@ -130,31 +130,39 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    true_positive_true = []
-    true_positive_false = []
-    false_positive_true = []
-    false_positive_false = []
+    # Create empty lists for sensitivity and specificity values
+    true_sensitivity = []
+    false_sensitivity = []
+    true_specificity = []
+    false_specificity = []
 
+    # Iterate throught elements in labels
     for count, element in enumerate(labels):
+        # Check if element in labels is positive
         if element == True:
+            # Count actual positive labels that were correctly identified
             if element == predictions[count]:
-                true_positive_true.append(element)
+                true_sensitivity.append(element)
+            # Count actual positive labels that were incorrectly identified
             else:
-                true_positive_false.append(element)
+                false_sensitivity.append(element)
+        # Check if element in labels is negative
         else:
+            # Count actual negative labels that were correctly identified
             if element == predictions[count]:
-                false_positive_true.append(element)
+                true_specificity.append(element)
+            # Count actual negative labels that were incorrectly identified
             else:
-                false_positive_false.append(element)
+                false_specificity.append(element)
 
+    # Calculate sensitivity: TP / (TP + FN)
+    # where TP is the count of true positives and FN is the count of false negatives.
+    sensitivity = len(true_sensitivity) / (len(true_sensitivity) + len(false_sensitivity))
+    # Calculate specificity: TN / (TN + FP)
+    # where TN is the count of true negatives and FP is the count of false positives.
+    specificity = len(true_specificity) / (len(true_specificity) + len(false_specificity))
 
-    true_sum = len(true_positive_true) + len(true_positive_false)
-    false_sum = len(false_positive_true) + len(false_positive_false)
-
-    true_positive_rate = len(true_positive_true) / true_sum
-    true_negative_rate = len(false_positive_true) / false_sum
-
-    return (true_positive_rate, true_negative_rate)
+    return (sensitivity, specificity)
 
 
 if __name__ == "__main__":
