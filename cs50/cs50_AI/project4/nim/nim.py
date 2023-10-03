@@ -101,9 +101,8 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        # try??
-        if self.q[state, action] != 0:
-            return self.q[state, action]
+        if (tuple(state), action) in self.q:
+            return self.q[tuple(state), action]
         else:
             return 0
 
@@ -122,7 +121,7 @@ class NimAI():
         `alpha` is the learning rate, and `new value estimate`
         is the sum of the current reward and estimated future rewards.
         """
-        self.q[state, action] = self.old_q[state, action] + self.alpha * (reward + future_rewards - self.q[state, action])
+        self.q[tuple(state), action] = old_q + self.alpha * (reward + future_rewards - old_q)
 
     def best_future_reward(self, state):
         """
@@ -134,11 +133,26 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
+        # Create a list for Q-values
         q_value = []
-        actions = self.available_actions(state)
-        for action in actions:
-            q_value.append(self.q[state, action])
-        return max(q_value)
+        
+        # Get all possible actions
+        actions = Nim.available_actions(state)
+
+        # Check if there are possible moves
+        if actions:
+            # Get Q value of every possible move in our state
+            for action in actions:
+                # Check if there's a Q-value for this state-action pair
+                if (tuple(state), action) in self.q:
+                    q_value.append(self.q[tuple(state), action])
+                else:
+                    q_value.append(0)
+            # Return best possible Q value for the current state
+            return max(q_value)
+        # If there are no possible moves, return 0
+        else:
+            return 0
         
 
     def choose_action(self, state, epsilon=True):
@@ -156,26 +170,40 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
+        # Create a list for Q values and actions
         q_values = []
+
+        # Get all possible actions for the current state
         actions = Nim.available_actions(state)
+
+        # Get Q value of every possible move in our state and its action
         for action in actions:
-            try:
+            # Check if there's a Q value for this state-action pair
+            if (tuple(state), action) in self.q:
                 q_values.append([self.q[tuple(state), action], action])
-            except KeyError:
+            else:
                 q_values.append([0, action])
-        max_q_value = max(q_values)
-        for q_value in q_values:
-            if q_value[0] == max_q_value:
-                best_move = q_value[1]
         
+        # Get Q value and action pair with the highest Q value
+        max_q_value = max(q_values)
+        
+        # Get the best move
+        best_move = max_q_value[1]
+        
+        # Generate a random float number from 0 to 1
         random_num = random.random()
+        
+        # Check if our action selection strategy is epsilon-greedy
         if epsilon == True:
-            if self.epsilon <= random_num:
-                return random.choice(actions)
+            # Check if our random generated number is smaller than epsilon
+            #If yes, return a random move from the list of available actions
+            if self.epsilon >= random_num:
+                return random.choice(list(actions))
+            # Otherwise, return the best possible move according to Q-values
             else:
                 return best_move
+        # If not using epsilon-greedy, return the best possible move according to Q-values
         return best_move
-
 
 
 def train(n):
