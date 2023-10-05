@@ -58,7 +58,33 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
+    # Create empty lists for images and labels
+    images = []
+    labels = []
+
+    # Set height and width of images
+    IMG_HEIGHT = 30
+    IMG_WIDTH = 30
+
+    # Get list of all directories  in data_dir
+    labels_list = os.listdir(data_dir)
+
+    # Iterate through all directories in data_dir
+    for label in labels_list:
+        # Get list of all files in lebel directory
+        files = os.listdir(os.path.join(data_dir, label))
+        # Iterate through all files in lebel directory
+        for file in files:
+            # Read images as numpy.ndarray
+            image = cv2.imread(os.path.join(data_dir, label, file))
+            # Resize images
+            resized_image = cv2.resize(image, (IMG_HEIGHT, IMG_WIDTH))
+            # Add resized images to list of images
+            images.append(resized_image)
+            # Add category number (label) for each of the corresponding images
+            labels.append(int(label))
+    
+    return (images, labels)
 
 
 def get_model():
@@ -67,7 +93,45 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+        model = tf.keras.models.Sequential([
+
+        # First convolutional layer. Learn 32 filters using a 3x3 kernel
+        tf.keras.layers.Conv2D(
+            32, (3, 3), activation="relu", input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+        ),
+
+        # Second convolutional layer. Learn 32 filters using a 3x3 kernel
+        tf.keras.layers.Conv2D(
+            32, (3, 3), activation="relu", input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+        ),
+
+        # Third convolutional layer. Learn 32 filters using a 3x3 kernel
+        tf.keras.layers.Conv2D(
+            32, (3, 3), activation="relu", input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+        ),
+
+        # Max-pooling layer, using 2x2 pool size
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+
+        # Flatten units
+        tf.keras.layers.Flatten(),
+
+        # Add a hidden layer with dropout
+        tf.keras.layers.Dense(128, activation="relu"),
+        tf.keras.layers.Dropout(0.5),
+
+        # Add an output layer with output units for all 43 signs
+        tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax")
+    ])
+
+    # Train neural network
+    model.compile(
+        optimizer="adam",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
 
 
 if __name__ == "__main__":
