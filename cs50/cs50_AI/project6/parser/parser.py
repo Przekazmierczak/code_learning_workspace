@@ -97,8 +97,24 @@ def np_chunk(tree):
     noun phrases as subtrees.
     """
 
-    print(tree)
-    return []
+    subtrees = tree.subtrees()
+    np_list = []
+    for tree in subtrees:
+        if tree.label() == "NP":
+            np_list.append(tree)
+
+    for element in np_list:
+        element_subtrees = element.subtrees()
+        print(element_subtrees)
+        for n, element_subtree in enumerate(element_subtrees):
+            if n != 0:
+                if element_subtree.label() == "NP":
+                    np_list.remove(element)
+                    break
+    for element in np_list:
+        print(element)
+
+    return np_list
 
 
 if __name__ == "__main__":
