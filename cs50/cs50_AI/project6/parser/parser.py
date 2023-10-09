@@ -96,24 +96,30 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
-
-    subtrees = tree.subtrees()
+    # Create an empty list for all noun phrase chunks in the sentence tree
     np_list = []
+    # Get subtrees of the input tree
+    subtrees = tree.subtrees()
+    # Iterate through the subtrees
     for tree in subtrees:
+        # Check if the label of the current subtree is "NP"
         if tree.label() == "NP":
-            np_list.append(tree)
+            # Create a variable to indicate if the current subtree contains "NP" labels within itself
+            contains_np = False
 
-    for element in np_list:
-        element_subtrees = element.subtrees()
-        print(element_subtrees)
-        for n, element_subtree in enumerate(element_subtrees):
-            if n != 0:
-                if element_subtree.label() == "NP":
-                    np_list.remove(element)
+            # Iterate through subtrees of the current subtree
+            for subtree in tree.subtrees():
+                # Check if the subtree is not current tree and has a "NP" label
+                if subtree != tree and subtree.label() == "NP":
+                    # If yes, change contains_np to True and break out of the loop
+                    contains_np = True
                     break
-    for element in np_list:
-        print(element)
 
+            # If the subtree does not contain "NP" labels within itself, add it to the np_list
+            if not contains_np:
+                np_list.append(tree)
+
+    # Return the list of all noun phrase chunks in the sentence tree
     return np_list
 
 
