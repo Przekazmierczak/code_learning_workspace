@@ -19,7 +19,7 @@ S -> NVP | NVP Conj NVP | NVP Conj VP NP
 NVP -> NP VP | NVP NP | NVP Adv
 NP -> AdjNP | P AdjNP | Det AdjNP | P Det AdjNP | NP NP
 AdjNP -> N | Adj AdjNP
-VP -> V | Adv V | V Adv
+VP -> V | Adv V | V Adv | V NP
 """
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
