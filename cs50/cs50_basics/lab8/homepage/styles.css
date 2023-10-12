@@ -1,0 +1,56 @@
+body {
+    background-image: url("https://i.pinimg.com/564x/33/e8/49/33e849048740155e11e888e5fff16b75.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+header {
+    text-align: center;
+    color: white;
+    font-family: Copperplate, "Copperplate Gothic Light", fantasy;
+    font-size: 70px;
+    background-color: black;
+}
+
+menu {
+    color: white;
+    text-align: center;
+    font-size: 30px;
+    background-color: purple;
+    border: 3px solid black;
+    -webkit-text-stroke: 0.3px black;
+}
+.gray {
+    background-color: gray;
+    cursor: pointer;
+}
+
+.nearly {
+    color: white;
+    font-size: 35px;
+    -webkit-text-stroke: 0.7px black;
+}
+
+section {
+    color: orange;
+    font-family: Copperplate, "Copperplate Gothic Light", fantasy;
+    font-size: 60px;
+    float:middle;
+    -webkit-text-stroke: 1px black;
+}
+
+article {
+    color: white;
+    font-size: 30px;
+    -webkit-text-stroke: 0.7px black;
+}
+
+footer {
+    color: white;
+    font-size: 30px;
+    -webkit-text-stroke: 0.7px black;
+}
+img {
+}

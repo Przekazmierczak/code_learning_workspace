@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            // TODO: Add code to check answers to questions
+            function inputAnswer(id) {
+                let elements;
+                let answer;
+                if (parseInt(id) > 10 && parseInt(id) < 20) {
+                    elements = document.querySelectorAll('.questionNr1');
+                    answer = document.querySelector('.answer1')
+                } else if (parseInt(id) > 20 && parseInt(id) < 30) {
+                    elements = document.querySelectorAll('.questionNr2')
+                    answer = document.querySelector('.answer2')
+                };
+                elements.forEach((element) => {
+                    element.classList.remove('correct_answer', 'wrong_answer')
+                });
+                let element = document.getElementById(id);
+                if (element.classList.contains('correct')) {
+                    element.classList.add('correct_answer')
+                    answer.innerHTML = "That's correct";
+                } else if (element.classList.contains('wrong')) {
+                    element.classList.add('wrong_answer')
+                    answer.innerHTML = "Are you sure??????????????????????????????";
+                }
+            };
+            function checkAnswer() {
+                let answer = document.querySelector('#answer').value;
+                let element = document.getElementById('freeAnswerButton');
+                event.preventDefault();
+                if (answer == "poker face") {
+                    document.querySelector('.freeAnswer').innerHTML = "P-p-p-poker face, f-f-fuck her face (mum-mum-mum-mah) P-p-p-poker face, f-f-fuck her face (mum-mum-mum-mah)"
+                    element.classList.add('correct_answer')
+                    element.classList.remove('wrong_answer');
+                } else {
+                    document.querySelector('.freeAnswer').innerHTML = "no!"
+                    element.classList.add('wrong_answer')
+                    element.classList.remove('correct_answer');
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <!-- TODO: Add multiple choice question here -->
+                <h3>Who is the biggest wierdo?</h3>
+                <button id="11" onclick="inputAnswer('11')" class = "correct questionNr1">
+                    Anna
+                </button>
+                <button id="12" onclick="inputAnswer('12')" class = "correct questionNr1">
+                    Kanna
+                </button>
+                <button id="13" onclick="inputAnswer('13')" class = "correct questionNr1">
+                    Sharisia Chan
+                </button>
+                <button id="14" onclick="inputAnswer('14')" class = "wrong questionNr1">
+                    Przemek
+                </button>
+                <h4 class = "answer1" ></h4>
+                <h3>What is the capital of Japan?</h3>
+                <button id="21" onclick="inputAnswer('21')" class = "wrong questionNr2">
+                    Tokyo
+                </button>
+                <button id="22" onclick="inputAnswer('22')" class = "correct questionNr2">
+                    Konoha
+                </button>
+                <button id="23" onclick="inputAnswer('23')" class = "wrong questionNr2">
+                    Kyoto
+                </button>
+                <button id="24" onclick="inputAnswer('24')" class = "wrong questionNr2">
+                    Tsushima
+                </button>
+                <h4 class = "answer2" ></h4>
+            </div>
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <!-- TODO: Add free response question here -->
+                <h3>No, he can't read my?</h3>
+                <form onsubmit="checkAnswer(event)"; return false;>
+                    <input id="answer" autocomplete="off" type="text">
+                    <button id="freeAnswerButton" type="submit">Check answer</button>
+                </form>
+                <h4 class = "freeAnswer"></h4>
+            </div>
+        </div>
+    </body>
+</html>
