@@ -56,16 +56,27 @@ class Solution:
 
 def main():
 
-    l1 = [2,4,3]
-    l2 = [5,6,4]
+    l1_list = [2,4,3]
+    l2_list = [5,6,4]
+
+    l1 = None
+    for i in reversed(range(len(l1_list))):
+        l1 = ListNode(l1_list[i], l1)
+
+    l2 = None
+    for i in reversed(range(len(l2_list))):
+        l2 = ListNode(l2_list[i], l2)
 
     solution = Solution()
 
-    # result = solution.addTwoNumbers(l1, l2)
+    result = solution.addTwoNumbers(l1, l2)
     
-    # The result is not working in this file!
-    # print(result)
+    result_node_list = []
+    while result:
+        result_node_list.append(result.val)
+        result = result.next
 
+    print(result_node_list)
 
 if __name__ == "__main__":
     main()
