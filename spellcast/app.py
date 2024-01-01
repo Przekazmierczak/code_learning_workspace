@@ -1,132 +1,100 @@
 import json
 from flask import Flask, render_template, request
 
+class Trie:
+    def __init__(self):
+        self.end = False
+        self.letters = {}
+
+# FLASK
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        array = []
-        # array that helps give all input letters number from 1 to 25
-        letters_array = []
-        get_array(array, letters_array)
-        answers = []
-        for count in range(15, 2, -1):
-            file_name = f"words/{count}-letter-words.json"
-            answers.extend(check_file(file_name, array))
-            count = count - 1
-
+        trie_root = build_trie()
+        game_board = create_board()
+        letters_array = flat_and_upper(game_board)
+        words_found = find_words(game_board, trie_root)
+        answers = dict(sorted(words_found.items(), key=lambda item: len(item[0]), reverse=True))
         post = True
         return render_template("index.html", answers=answers,
                                post=post,
                                letters_array=letters_array)
     return render_template("index.html")
 
-def get_array(array, letters_array):
+# Helper functions
+def flat_and_upper(game_array):
+    flat_list = []
+    for row in game_array:
+        flat_list.extend(row)
+    
+    flat_list = [x.upper() for x in flat_list]
+    return flat_list
+
+def create_board():
+    game_board = []
     counter = 1
     for _ in range(5):
         temp_array = []
         for _ in range(5):
             letter = (request.form.get(f"{counter}")).lower()
             temp_array.append(letter)
-            letter = letter.upper()
-            letters_array.append(letter)
             counter += 1
-        array.append(temp_array)
+        game_board.append(temp_array)
+    return game_board
 
-def check_file(file_name, array):
-    check_list = []
-    with open(file_name, encoding="utf-8") as file:
-        words = json.load(file)
-        for word in words:
-            checked_word = check_word(word['word'], array)
-            if checked_word is not None:
-                check_list.append(checked_word)
-    return check_list
+def build_trie():
+    trie_root = Trie()
+    for i in range(2, 15):
+        file_name = f"words/{i}-letter-words.json"
+        with open(file_name, encoding="utf-8") as file:
+            words = json.load(file)
+            for word in words:
+                curr_node = trie_root
+                curr_word = word['word']
+                for letter in curr_word:
+                    if letter not in curr_node.letters:
+                        curr_node.letters[letter] = Trie()
+                    curr_node = curr_node.letters[letter]
+                curr_node.end = True
+    return trie_root
 
-def check_word(word, array):
-    # Create list contained letters of checking word
-    word_array = []
-    for letter in word:
-        word_array.extend(letter)
-    row_number = 0
-    while row_number < 5:
-        column_number = 0
-        for letter in array[row_number]:
-            words_letter_number = [0]
-            
-            if letter == word_array[0]:
-                # create locations[i] lists
-                for i in range(20):
-                    globals()[f'locations{i}'] = []
-                # create records[i] lists - track already used letters
-                for i in range(20):
-                    globals()[f'records{i}'] = []
-                
-                globals()[f'locations{words_letter_number[-1]}'] = [[row_number, column_number]]
-                
-                while True:
-                    if len(globals()[f'locations{words_letter_number[-1]}']) > 0:
-                        for row in range(3):
-                            for column in range(3):
-                                # skip the middle location
-                                middle_condition = True
-                                if row == 1 and column == 1:
-                                    middle_condition = False
-                                if (
-                                (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) >= 0 
-                                and (globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)) < 5 
-                                and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) >= 0 
-                                and (globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)) < 5
-                                ):
-                                    if (
-                                        word_array[words_letter_number[-1]+1] 
-                                        == array[globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1)][globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1)] 
-                                        and middle_condition is True
-                                    ):
-                                        # prevent from using previous numbers
-                                        previous_condition = True
-                                        for i in range(len(words_letter_number) - 1):
-                                            if (
-                                            globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1) == globals()[f'records{i}'][0][0] 
-                                            and globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1) == globals()[f'records{i}'][0][1]
-                                            ):
-                                                previous_condition = False
-                                        
-                                        if previous_condition is True:
-                                            globals()[f'location{words_letter_number[-1] + 1}'] = []
-                                            globals()[f'location{words_letter_number[-1] + 1}'].append(globals()[f'locations{words_letter_number[-1]}'][0][0] + (row - 1))
-                                            globals()[f'location{words_letter_number[-1] + 1}'].append(globals()[f'locations{words_letter_number[-1]}'][0][1] + (column - 1))
-                                            globals()[f'locations{words_letter_number[-1] + 1}'].append(globals()[f'location{words_letter_number[-1] + 1}'])
-                    
-                    if len(globals()[f'locations{words_letter_number[-1]}']) > 0:
-                        record = globals()[f'locations{words_letter_number[-1]}'].copy()
-                        globals()[f'records{words_letter_number[-1]}'].insert(0, record[0])
-                        globals()[f'locations{words_letter_number[-1]}'].pop(0)
-                    
-                    if len(globals()[f'locations{words_letter_number[-1] + 1}']) > 0:
-                        words_letter_number.append(words_letter_number[-1] + 1)
-                    
-                    if len(globals()[f'locations{words_letter_number[-1]}']) == 0:
-                        words_letter_number.pop()
-                    
-                    if len(words_letter_number) == 0:
-                        break
-                    
-                    if len(words_letter_number) == len(word_array):
-                        record = globals()[f'locations{words_letter_number[-1]}'].copy()
-                        globals()[f'records{words_letter_number[-1]}'].extend(record)
-                        records = []
-                        
-                        for i in range(len(word_array)):
-                            record = globals()[f'records{i}'][0]
-                            # change record to numbers from 1 to 25
-                            record = record[0] * 5 + record[1] + 1
-                            records.append(record)
-                        
-                        word = word.capitalize()
-                        return word, records
+def find_words(array, trie):
+    result = {}
+    for row in range(5):
+        for col in range(5):
+            check_position(row, col, trie, set(), [], array, result)
+    return result
 
-            column_number += 1
-        row_number += 1
+def check_position(row, col, node, visited, path, game_board, result):
+    if row not in range(5) or col not in range(5) or (row, col) in visited or game_board[row][col] not in node.letters:
+        return
+    
+    curr_node = node.letters[game_board[row][col]]
+    visited.add((row, col))
+    path.append((row, col))
 
+    if curr_node.end:
+        word_list = []
+        position_in_numbers = []
+        for position in path:
+            word_row, word_col = position
+            word_list.append(game_board[word_row][word_col])
+            position_in_numbers.append(word_row * 5 + word_col + 1)
+
+        word_string = "".join(word_list).capitalize()
+
+        if word_string not in result:
+            result[word_string] = position_in_numbers
+
+    neighbours = [(row - 1, col + 1), (row, col + 1), (row + 1, col + 1), 
+                    (row - 1, col), (row + 1, col), 
+                    (row - 1, col - 1), (row, col - 1), (row + 1, col - 1),]
+    
+    for neighbour in neighbours:
+        neighbour_row, neighbour_col = neighbour
+        check_position(neighbour_row, neighbour_col, curr_node, visited, path, game_board, result)
+    
+    visited.remove((row, col))
+    path.pop()

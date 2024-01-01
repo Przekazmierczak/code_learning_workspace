@@ -63,10 +63,17 @@ h1 {
     background-color: rgb(252, 123, 123);
 }
 
+.center.buttons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+}
 button {
     color: white;
     font-size: 15.5px;
     -webkit-text-stroke: 1px black;
     font-weight: bold;
     background-color: rgb(107, 213, 255);
+    min-width: 100px;
 }
