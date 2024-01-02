@@ -16,7 +16,7 @@ def index():
         game_board = create_board()
         letters_array = flat_and_upper(game_board)
         words_found = find_words(game_board, trie_root)
-        answers = dict(sorted(words_found.items(), key=lambda item: len(item[0]), reverse=True))
+        answers = dict(sorted(words_found.items(), key=lambda item: item[1][1], reverse=True))
         post = True
         return render_template("index.html", answers=answers,
                                post=post,
@@ -76,17 +76,24 @@ def check_position(row, col, node, visited, path, game_board, result):
     path.append((row, col))
 
     if curr_node.end:
+        letters_values = {"a":1, "b":4, "c":5, "d":3, "e":1, "f":5, "g":3, "h":4, "i":1, "j":7, "k":6, "l":3, "m":4, "n":2, "o":1, "p":4, "q":8, "r":2, "s":2, "t":2, "u":4, "v":5, "w":5, "x":7, "y":4, "z":8}
         word_list = []
         position_in_numbers = []
+        value = 0
         for position in path:
             word_row, word_col = position
-            word_list.append(game_board[word_row][word_col])
+            letter = game_board[word_row][word_col]
+            word_list.append(letter)
+            value += letters_values[letter]
             position_in_numbers.append(word_row * 5 + word_col + 1)
+        
+        if len(path) > 5:
+            value += 10
 
         word_string = "".join(word_list).capitalize()
 
-        if word_string not in result:
-            result[word_string] = position_in_numbers
+        if word_string not in result or result[word_string][1] < value:
+            result[word_string] = (position_in_numbers, value)
 
     neighbours = [(row - 1, col + 1), (row, col + 1), (row + 1, col + 1), 
                     (row - 1, col), (row + 1, col), 
@@ -98,3 +105,4 @@ def check_position(row, col, node, visited, path, game_board, result):
     
     visited.remove((row, col))
     path.pop()
+

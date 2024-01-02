@@ -27,21 +27,31 @@
                     document.getElementById(arr[i]).classList.add('highlight_light')
                 };
             }
-            document.addEventListener("DOMContentLoaded", function () {
-                var myTextBox = document.getElementsByName('1')[0];
-                myTextBox.focus();
-            });
-            function move_to_next_input(currentInput, nextInputId) {
-                var nextInput = document.getElementsByName(nextInputId)[0];
-                if (currentInput.value.length === 1) {
-                  nextInput.focus();
-                }
-            }
             function reset_button() {
-                var allInputs = document.querySelectorAll('input[type="text"]');
-                allInputs.forEach(function (input) {
+                var all_inputs = document.querySelectorAll('input[type="text"]');
+                all_inputs.forEach(function (input) {
                     input.value = '';
                 });
+                var answer = document.querySelector('.answer');
+                if (answer) {
+                    answer.style.display = 'none';
+                }
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach((element) => {
+                element.classList.remove('highlight_dark', 'highlight_light');
+                });
+            }
+            document.addEventListener("DOMContentLoaded", function () {
+                var text_box = document.getElementsByName('1')[0];
+                text_box.focus();
+            });
+            function move_to_next_input(current_input, next_input_id) {
+                var next_text_box = document.getElementsByName(next_input_id)[0];
+                if (next_text_box) {
+                    if (current_input.value.length === 1) {
+                    next_text_box.focus();
+                    }
+                }
             }
         </script>
     </head>
@@ -79,7 +89,7 @@
                 <div class="answer">
                     {% set count = namespace(value=26) %}
                     {% for answer in answers %}
-                        <span id= {{ count.value }} onclick="pick_word( '{{ answers[answer] }}' )" onmouseenter="change_color('{{ count.value }}')" onmouseleave="change_color_back('{{ count.value }}')">{{ answer }}, </span>
+                        <span id= {{ count.value }} onclick="pick_word( '{{ answers[answer][0] }}' )" onmouseenter="change_color('{{ count.value }}')" onmouseleave="change_color_back('{{ count.value }}')">{{ answer }} ({{ answers[answer][1] }}), </span>
                         {% set count.value = count.value + 1 %}
                     {% endfor %}
                 </div>
