@@ -53,6 +53,22 @@
                     }
                 }
             }
+            function special_block(element) {
+                if (event.target.tagName.toLowerCase() !== 'input') {
+                    const classes = ['normal_block', 'double_letter', 'triple_letter', 'double_points'];
+
+                    for (let i = 0; i < classes.length; i++) {
+                    const currentClass = classes[i];
+                    const nextClass = classes[(i + 1) % classes.length];
+                
+                        if (element.classList.contains(currentClass)) {
+                            element.classList.remove(currentClass);
+                            element.classList.add(nextClass);
+                            break;
+                        }
+                    }
+                }
+            }
         </script>
     </head>
     <body>
@@ -66,9 +82,9 @@
                             <tr class="letters">
                                 {% for i in range(5) %}
                                     {% if post %}
-                                        <td  id={{ count.value }} class="letters"><input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} ></td>
+                                        <td  id={{ count.value }} class="letters normal_block" onclick="special_block(this)"><input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} ></td>
                                     {% else %}
-                                        <td class="letters"><input name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')"></td>
+                                        <td class="letters normal_block" onclick="special_block(this)"><input name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')"></td>
                                     {% endif %}
                                 {% set count.value = count.value + 1 %}
                                 {% endfor %}
