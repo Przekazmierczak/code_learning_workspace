@@ -41,34 +41,51 @@
                 element.classList.remove('highlight_dark', 'highlight_light');
                 });
             }
-            document.addEventListener("DOMContentLoaded", function () {
-                var text_box = document.getElementsByName('1')[0];
-                text_box.focus();
-            });
             function move_to_next_input(current_input, next_input_id) {
                 var next_text_box = document.getElementsByName(next_input_id)[0];
                 if (next_text_box) {
                     if (current_input.value.length === 1) {
-                    next_text_box.focus();
+                        next_text_box.focus();
                     }
                 }
             }
-            function special_block(element) {
+            function special_block(element, count) {
                 if (event.target.tagName.toLowerCase() !== 'input') {
                     const classes = ['normal_block', 'double_letter', 'triple_letter', 'double_points'];
-
+                    
                     for (let i = 0; i < classes.length; i++) {
-                    const currentClass = classes[i];
-                    const nextClass = classes[(i + 1) % classes.length];
-                
-                        if (element.classList.contains(currentClass)) {
+                        const currentClass = classes[i];
+                        const nextClass = classes[(i + 1) % classes.length];
+
+                        var input_name = "special_block_" + count;
+                        var input = document.querySelector('input[name="' + input_name + '"]');
+                        
+                        if ((input.value === currentClass)) {
                             element.classList.remove(currentClass);
                             element.classList.add(nextClass);
+                            input.value = nextClass
                             break;
                         }
                     }
                 }
             }
+            document.addEventListener("DOMContentLoaded", function () {
+                var text_box = document.getElementsByName('1')[0];
+                text_box.focus();
+
+                for (let i = 1; i < 26; i++) {
+                    var input_name = "special_block_" + i;
+                    var input = document.querySelector('input[name="' + input_name + '"]');
+
+                    if (input.value === 'double_letter') {
+                        document.getElementById(i.toString()).classList.add('double_letter');
+                    } else if (input.value === 'triple_letter') {
+                        document.getElementById(i.toString()).classList.add('triple_letter');
+                    } else if (input.value === 'double_points') {
+                        document.getElementById(i.toString()).classList.add('double_points');
+                    }
+                }
+            });
         </script>
     </head>
     <body>
@@ -82,9 +99,15 @@
                             <tr class="letters">
                                 {% for i in range(5) %}
                                     {% if post %}
-                                        <td  id={{ count.value }} class="letters normal_block" onclick="special_block(this)"><input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} ></td>
+                                        <td  id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
+                                            <input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} >
+                                            <input type="hidden" name=special_block_{{ count.value }} value="normal_block">
+                                        </td>
                                     {% else %}
-                                        <td class="letters normal_block" onclick="special_block(this)"><input name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')"></td>
+                                        <td id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
+                                            <input name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')">
+                                            <input type="hidden" name=special_block_{{ count.value }} value="normal_block">
+                                        </td>
                                     {% endif %}
                                 {% set count.value = count.value + 1 %}
                                 {% endfor %}
@@ -93,9 +116,8 @@
                     </table>
                     <p></p>
                     <div class="center">
-                        <input name="test" type="hidden" value="15">
                         <div class="center buttons">
-                            <button id="findWords" type="submit" name="test" value="15">Find words</button>
+                            <button id="findWords" type="submit">Find words</button>
                             <button id="resetButton" type="button" onclick="reset_button()">Reset</button>
                         </div>
                     </div>
