@@ -9,37 +9,69 @@
         <link href="/static/styles.css" rel="stylesheet">
         <title>SpellCast Solver</title>
         <script>
+            function remove_highlight() {
+                const darkElements = document.querySelectorAll('.highlight_dark');
+                const lightElements  = document.querySelectorAll('.highlight_light');
+                const allElements = Array.from(darkElements).concat(Array.from(lightElements))
+                
+                allElements.forEach((element) => {
+                    element.classList.remove('highlight_dark', 'highlight_light');
+                });
+            }
+            function copy_special_block_value() {
+                for (let i = 1; i < 26; i++) {
+                    var input_name = "special_block_" + i;
+                    var input = document.querySelector('input[name="' + input_name + '"]');
+            2
+                    const values = ['normal_block', 'double_letter', 'triple_letter', 'double_points'];
+            
+                    values.forEach(function(value){
+                        if (input.value === value) {
+                            document.getElementById(i.toString()).classList.add(value);
+                        }
+                    });
+                }
+            }
+            function delay(milliseconds){
+                return new Promise(resolve => {
+                    setTimeout(resolve, milliseconds);
+                });
+            }
             function change_color(id) {
                 document.getElementById(id).classList.add('red');
             }
             function change_color_back(id) {
                 document.getElementById(id).classList.remove('red');
             }
-            function pick_word(answer) {
-                const allElements = document.querySelectorAll('*');
-                allElements.forEach((element) => {
-                element.classList.remove('highlight_dark', 'highlight_light');
-                });
+            async function pick_word(answer) {
+                remove_highlight()
                 const str = answer;
                 const arr = JSON.parse(str);
-                document.getElementById(arr[0]).classList.add('highlight_dark')
+                document.getElementById(arr[0]).classList.add('highlight_dark');
                 for (let i = 1; i < (arr.length); i++) {
-                    document.getElementById(arr[i]).classList.add('highlight_light')
-                };
+                    await delay(150)
+                    document.getElementById(arr[i]).classList.add('highlight_light');
+                }
             }
             function reset_button() {
-                var all_inputs = document.querySelectorAll('input[type="text"]');
+                var all_inputs = document.querySelectorAll('.letters_values');
                 all_inputs.forEach(function (input) {
                     input.value = '';
                 });
+                var reset_classes = document.querySelectorAll('.letters');
+                reset_classes.forEach(function(reset_class) {
+                    reset_class.classList.remove('normal_block', 'double_letter', 'triple_letter', 'double_points');
+                });
+                var reset_values = document.querySelectorAll('.special_block');
+                reset_values.forEach(function (reset_value) {
+                    reset_value.value = 'normal_block';
+                });
+                copy_special_block_value();
                 var answer = document.querySelector('.answer');
                 if (answer) {
                     answer.style.display = 'none';
                 }
-                const allElements = document.querySelectorAll('*');
-                allElements.forEach((element) => {
-                element.classList.remove('highlight_dark', 'highlight_light');
-                });
+                remove_highlight()
             }
             function move_to_next_input(current_input, next_input_id) {
                 var next_text_box = document.getElementsByName(next_input_id)[0];
@@ -63,7 +95,7 @@
                         if ((input.value === currentClass)) {
                             element.classList.remove(currentClass);
                             element.classList.add(nextClass);
-                            input.value = nextClass
+                            input.value = nextClass;
                             break;
                         }
                     }
@@ -72,19 +104,7 @@
             document.addEventListener("DOMContentLoaded", function () {
                 var text_box = document.getElementsByName('1')[0];
                 text_box.focus();
-
-                for (let i = 1; i < 26; i++) {
-                    var input_name = "special_block_" + i;
-                    var input = document.querySelector('input[name="' + input_name + '"]');
-
-                    if (input.value === 'double_letter') {
-                        document.getElementById(i.toString()).classList.add('double_letter');
-                    } else if (input.value === 'triple_letter') {
-                        document.getElementById(i.toString()).classList.add('triple_letter');
-                    } else if (input.value === 'double_points') {
-                        document.getElementById(i.toString()).classList.add('double_points');
-                    }
-                }
+                copy_special_block_value();
             });
         </script>
     </head>
@@ -100,13 +120,13 @@
                                 {% for i in range(5) %}
                                     {% if post %}
                                         <td  id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
-                                            <input name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} >
-                                            <input type="hidden" name=special_block_{{ count.value }} value="normal_block">
+                                            <input class ="letters_values" name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} >
+                                            <input class ="special_block" type="hidden" name=special_block_{{ count.value }} value={{ special_block_array[count.value - 1] }}>
                                         </td>
                                     {% else %}
                                         <td id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
-                                            <input name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')">
-                                            <input type="hidden" name=special_block_{{ count.value }} value="normal_block">
+                                            <input class ="letters_values" name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')">
+                                            <input class ="special_block" type="hidden" name=special_block_{{ count.value }} value="normal_block">
                                         </td>
                                     {% endif %}
                                 {% set count.value = count.value + 1 %}
