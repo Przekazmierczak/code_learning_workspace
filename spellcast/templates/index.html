@@ -2,128 +2,49 @@
 
 <html lang="en">
     <head>
+        <!-- Meta tags for character set and viewport -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-        <link href="/static/styles.css" rel="stylesheet">
-        <title>SpellCast Solver</title>
-        <script>
-            function remove_highlight() {
-                const darkElements = document.querySelectorAll('.highlight_dark');
-                const lightElements  = document.querySelectorAll('.highlight_light');
-                const allElements = Array.from(darkElements).concat(Array.from(lightElements))
-                
-                allElements.forEach((element) => {
-                    element.classList.remove('highlight_dark', 'highlight_light');
-                });
-            }
-            function copy_special_block_value() {
-                for (let i = 1; i < 26; i++) {
-                    var input_name = "special_block_" + i;
-                    var input = document.querySelector('input[name="' + input_name + '"]');
-            2
-                    const values = ['normal_block', 'double_letter', 'triple_letter', 'double_points'];
-            
-                    values.forEach(function(value){
-                        if (input.value === value) {
-                            document.getElementById(i.toString()).classList.add(value);
-                        }
-                    });
-                }
-            }
-            function delay(milliseconds){
-                return new Promise(resolve => {
-                    setTimeout(resolve, milliseconds);
-                });
-            }
-            function change_color(id) {
-                document.getElementById(id).classList.add('red');
-            }
-            function change_color_back(id) {
-                document.getElementById(id).classList.remove('red');
-            }
-            async function pick_word(answer) {
-                remove_highlight()
-                const str = answer;
-                const arr = JSON.parse(str);
-                document.getElementById(arr[0]).classList.add('highlight_dark');
-                for (let i = 1; i < (arr.length); i++) {
-                    await delay(150)
-                    document.getElementById(arr[i]).classList.add('highlight_light');
-                }
-            }
-            function reset_button() {
-                var all_inputs = document.querySelectorAll('.letters_values');
-                all_inputs.forEach(function (input) {
-                    input.value = '';
-                });
-                var reset_classes = document.querySelectorAll('.letters');
-                reset_classes.forEach(function(reset_class) {
-                    reset_class.classList.remove('normal_block', 'double_letter', 'triple_letter', 'double_points');
-                });
-                var reset_values = document.querySelectorAll('.special_block');
-                reset_values.forEach(function (reset_value) {
-                    reset_value.value = 'normal_block';
-                });
-                copy_special_block_value();
-                var answer = document.querySelector('.answer');
-                if (answer) {
-                    answer.style.display = 'none';
-                }
-                remove_highlight()
-            }
-            function move_to_next_input(current_input, next_input_id) {
-                var next_text_box = document.getElementsByName(next_input_id)[0];
-                if (next_text_box) {
-                    if (current_input.value.length === 1) {
-                        next_text_box.focus();
-                    }
-                }
-            }
-            function special_block(element, count) {
-                if (event.target.tagName.toLowerCase() !== 'input') {
-                    const classes = ['normal_block', 'double_letter', 'triple_letter', 'double_points'];
-                    
-                    for (let i = 0; i < classes.length; i++) {
-                        const currentClass = classes[i];
-                        const nextClass = classes[(i + 1) % classes.length];
 
-                        var input_name = "special_block_" + count;
-                        var input = document.querySelector('input[name="' + input_name + '"]');
-                        
-                        if ((input.value === currentClass)) {
-                            element.classList.remove(currentClass);
-                            element.classList.add(nextClass);
-                            input.value = nextClass;
-                            break;
-                        }
-                    }
-                }
-            }
-            document.addEventListener("DOMContentLoaded", function () {
-                var text_box = document.getElementsByName('1')[0];
-                text_box.focus();
-                copy_special_block_value();
-            });
-        </script>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+        <!-- Custom CSS -->
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <!-- Custom JavaScript -->
+        <script src="/static/script.js"></script>
+        
+        <!-- Page title -->
+        <title>SpellCast Solver</title>
+
     </head>
     <body>
+        <!-- Main container -->
         <div class="container">
+            <!-- Header row with title -->
             <div class="row">
-                <h1>SpellCast Solver</h1>           
+                <h1>SpellCast Solver</h1>
+                <!-- Form for input -->
                 <form action="/" method="post">
+                    <!-- Table for letters and special blocks -->
                     <table class="center">
                             {% set count = namespace(value=1) %}
                             {% for i in range(5) %}
                             <tr class="letters">
                                 {% for i in range(5) %}
+                                    <!-- Individual cell for a letter -->
                                     {% if post %}
+                                        <!-- Input field with value and special block -->
                                         <td  id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
                                             <input class ="letters_values" name={{ count.value }} maxlength ="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')" value={{ letters_array[count.value - 1] }} >
                                             <input class ="special_block" type="hidden" name=special_block_{{ count.value }} value={{ special_block_array[count.value - 1] }}>
                                         </td>
                                     {% else %}
+                                        <!-- Input field with placeholder and default special block -->
                                         <td id={{ count.value }} class="letters" onclick="special_block(this, {{ count.value }})">
                                             <input class ="letters_values" name={{ count.value }} placeholder={{ count.value }} maxlength="1" size="1" autocomplete="off" type="text" oninput="move_to_next_input(this, '{{ count.value + 1 }}')">
                                             <input class ="special_block" type="hidden" name=special_block_{{ count.value }} value="normal_block">
@@ -134,19 +55,24 @@
                             </tr>
                             {% endfor %}
                     </table>
-                    <p></p>
+                    <!-- Buttons for actions -->
                     <div class="center">
                         <div class="center buttons">
+                            <!-- Submit button to find words -->
                             <button id="findWords" type="submit">Find words</button>
+                            <!-- Button to reset input fields -->
                             <button id="resetButton" type="button" onclick="reset_button()">Reset</button>
                         </div>
                     </div>
                 </form>
             </div>
+            <!-- Row for displaying answers -->
             <div class="row">
+                <!-- Div for displaying answers -->
                 <div class="answer">
                     {% set count = namespace(value=26) %}
                     {% for answer in answers %}
+                        <!-- Span for each answer with click and hover events -->
                         <span id= {{ count.value }} onclick="pick_word( '{{ answers[answer][0] }}' )" onmouseenter="change_color('{{ count.value }}')" onmouseleave="change_color_back('{{ count.value }}')">{{ answer }} ({{ answers[answer][1] }}), </span>
                         {% set count.value = count.value + 1 %}
                     {% endfor %}
