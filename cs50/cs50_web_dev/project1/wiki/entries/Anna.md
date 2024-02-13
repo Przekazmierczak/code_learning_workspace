@@ -1,3 +1,0 @@
-#Anna
-
-Giga wierdo.
