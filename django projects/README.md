@@ -34,21 +34,21 @@ This collection encompasses dynamic websites developed within the Django framewo
 ## Created accounts
 
 1) Commerce
-User: Harry / Pass: Potter
-User: Ron / Pass: Weasly
-User: Albus / Pass: Dumbledore
+- User: Harry / Pass: Potter
+- User: Ron / Pass: Weasly
+- User: Albus / Pass: Dumbledore
 
 2) Mail
-User: harrypotter@hogwart.uk / Pass: Potter
-User: ronweasly@hogwart.uk / Pass: Weasly
-User: hagrid@hogwart.uk / Pass: Hagrid
-User: dracomalfoy@hogwart.uk / Pass: Malfoy
+- User: harrypotter@hogwart.uk / Pass: Potter
+- User: ronweasly@hogwart.uk / Pass: Weasly
+- User: hagrid@hogwart.uk / Pass: Hagrid
+- User: dracomalfoy@hogwart.uk / Pass: Malfoy
 
 3) Socialmedia
-User: harrypotter / Pass: Potter
-User: ronweasly / Pass: Weasly
-User: albusdumbledore / Pass: dumbledore
-User: severussnape / Pass: snape
-User: hermionagranger / Pass: granger
+- User: harrypotter / Pass: Potter
+- User: ronweasly / Pass: Weasly
+- User: albusdumbledore / Pass: dumbledore
+- User: severussnape / Pass: snape
+- User: hermionagranger / Pass: granger
 
 Feel free to create your owns accounts.
