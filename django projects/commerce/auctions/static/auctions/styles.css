@@ -1,0 +1,111 @@
+body {
+    padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.comment_user {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.comment_date {
+    font-size: 13px;
+}
+
+.comment_comment {
+    border-bottom: solid 1px;
+    border-color: rgba(128, 128, 128, 0.185);
+}
+
+.comment_table {
+    width: 100%;
+}
+
+.finished_message {
+    font-size: 35px;
+    color: red;
+    text-align: center;
+}
+
+.comments_section {
+    text-align: center;
+    color: blue;
+    font-weight: bold;
+    font-size: 20px;
+    border-bottom: solid 1px;
+    border-color: rgba(128, 128, 128, 0.185);
+}
+
+.title {
+    font-size: 20px;
+}
+
+.title_auction {
+    font-size: 30px;
+    text-align: center;
+}
+
+.categorie {
+    font-size: 14px;
+}
+
+.owner {
+    font-size: 14px;
+}
+
+.starting_price {
+    font-size: 14px;
+}
+
+.description {
+    font-size: 14px;
+}
+
+.bid {
+    color:rgb(0, 132, 255);
+    text-align: center;
+}
+
+.price {
+    color: green;
+    font-size: 23px;
+}
+
+.price_auction {
+    color: green;
+    font-size: 23px;
+    text-align: center;
+}
+
+.listings {
+    padding-bottom: 20px;
+    border-bottom: solid 1px;
+    border-color: rgba(128, 128, 128, 0.185);
+}
+
+.button {
+    font-size: 14px;
+    width: 160px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.end_button {
+    font-size: 14px;
+    width: 160px;
+    display: block;
+    font-weight: bold;
+    color: red;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.comment_user {
+    color: orange;
+}

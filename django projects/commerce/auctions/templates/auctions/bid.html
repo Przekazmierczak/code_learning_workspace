@@ -1,0 +1,8 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {{ message }}
+    <div>
+        <a href="{% url 'auction' auction_id %}">Back</a>
+    </div>
+{% endblock %}

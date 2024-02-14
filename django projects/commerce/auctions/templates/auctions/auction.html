@@ -1,0 +1,104 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <!-- finished message -->
+    {% if auction.active == False %}
+        {% if auction.winning_user == None %}
+            <div class="finished_message">
+                <b>The auction Finished</b> the item has not been sold!</b>
+            </div>
+        {% else %}
+            <div class="finished_message">
+                <b>The auction Finished</b> winner: <b>{{ auction.winning_user }}!</b>
+            </div>
+        {% endif %}
+    {% endif %}
+    <!-- add/remove watchlist button -->
+    {% if not watchlist_check %}
+    <form action="{% url 'watchlist' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" value="{{ auction.id }}" name="auction">
+        <input type="hidden" value="add" name="function">
+        <input class="button" type="submit" value="Add to Watchlist">
+    </form>
+    {% else %}
+    <form action="{% url 'watchlist' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" value="{{ auction.id }}" name="auction">
+        <input type="hidden" value="remove" name="function">
+        <input class="button" type="submit" value="Remove from Watchlist">
+    </form>
+    {% endif %}
+    <!-- title -->
+    <div class="title_auction">
+        <strong>Title: {{ auction.auction_title }}</strong>
+    </div>
+    <!-- description -->
+    <div class="categorie"><b>Categorie:</b> {{ auction.categorie }}</div>
+    <div class="starting_price"><b>Starting price:</b> {{ auction.starting_price }}$ </div>
+    <div class="owner"><b>Published by:</b> {{ auction.auction_user }}</div>
+    {% if auction.auction_picture %}
+    <img src="{{ auction.auction_picture }}" alt="Picture" width="500" class="center">
+    {% endif %}
+    <div class="description"><b>Discription:</b></div>
+    <div>{{ auction.auction_description}}</div>
+    {% if auction.current_price == auction.starting_price %}
+    <div class="bid">There is no bids, be first!</div>
+    {% else %}
+    <div class="bid">Highest bidder: {{ auction.winning_user }}</div>
+    {% endif %}
+    <div class="price_auction">Current price: <b>{{ auction.current_price }}$</b></div>
+    <!-- bid button -->
+    {% if auction.active == True %}
+        {% if auction.auction_user != request.user %}
+            {% if not post %}
+                <form action="{% url 'auction' auction.id %}" method="post">
+                    {% csrf_token %}
+                    <input class="button" type="submit" value="Bid">
+                </form>
+            {% endif %}
+            {% if post %}
+                <form action="{% url 'bid' auction.id %}" method="post">
+                    {% csrf_token %}
+                    Your bid: {{ form.current_price }}$
+                    <input class="button" type="submit" value="Accept">
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <!-- comments section -->
+    <div class="comments_section">Comments section:</div>
+    {% for comment in comments %}
+    <table class="comment_table">
+        {% if comment.auction == auction %}
+        <tr>
+            <td class="comment_user">{{ comment.user }}</td>
+        </tr>
+        <tr>
+            <td class="comment_date">{{ comment.date }}</td>
+        </tr>
+        <tr>
+            <td class="comment_comment">{{ comment.comment }}</td>
+        </tr>
+        {% endif %}
+    </table>
+    {% endfor %}
+    <!-- comment button -->
+    {% if auction.active == True %}
+    <form action="{% url 'comment' auction.id %}">
+        <input class="button" type="submit" value="Comment">
+    </form>
+    {% endif %}
+    <!-- end listing button -->
+    <div>
+        {% if auction.auction_user == request.user  and auction.active == True %}
+        <form action="{% url 'end' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{ auction.id }}" name="auction">
+            <input class="end_button" type="submit" onclick="return confirm('Are you sure?');" value="End the Listing">
+        </form>
+        {% endif %}
+    </div>
+    <!-- back link -->
+    <div><a href="{% url 'index' %}">Back</a></div>
+    {% endblock %}

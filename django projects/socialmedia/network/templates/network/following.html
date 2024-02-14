@@ -1,0 +1,71 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% csrf_token %}
+    <h2>Following</h2>
+    <!-- New post form -->
+    <form id="new_post" action="{% url 'new_post' %}" method="post">
+        {% csrf_token %}
+        <h4>New Post</h4>
+        <div>{{ form.post }}</div>
+        <input type="submit" class="btn btn-outline-primary" value="Post">
+    </form>
+    <h3>Posts</h3>
+
+    <!-- Post list -->
+    {% for all_posts in page_obj %}
+        <table>
+            <thead>
+                <!-- User name -->
+                <th><a href="{% url 'profile' all_posts.0.user.id %}">{{ all_posts.0.user }}</a></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="post">
+                        <!-- Post -->
+                        <div id="post{{ all_posts.0.id }}">{{ all_posts.0.post }}</div>
+                    </td>
+                </tr>
+                <!-- Date -->
+                <tr><td><div class="date">{{ all_posts.0.date }}</div></td></tr>
+                <tr>
+                    <td>
+                        <!-- Number of likes -->
+                        <span id="likes_amount_{{ all_posts.0.id }}" class="likes_amount" data-id="{{ all_posts.0.id }}"></span>&#10084;
+                        <!-- Like button -->
+                        {% if user.is_authenticated %}
+                            {% if all_posts.0.user != request.user %}
+                                <button id="like_button_{{ all_posts.0.id }}" class="like_button btn btn-sm btn-outline-primary" data-id="{{ all_posts.0.id }}" data-user="{{ request.user.id }}"></button>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+    <!-- Page buttons -->
+    <div class="center">
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>    
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% csrf_token %}
+    <h2>Profile</h2>
+    <h1>{{ user_profile.username }}</h1>
+    <h5>Follows: {{ follows }}</h5>
+    <h5>Following: {{ following }}</h5>
+    <!-- Follow button -->
+    <!-- Check if user is logged -->
+    {% if user.is_authenticated %}
+    <!-- Check if user is looking at his own profile -->
+        {% if user_profile != request.user%}
+            <!-- Check if user is following profile -->
+            {% if follows_check == False %}
+                <!-- Follow button -->
+                <form action="{% url 'profile' user_id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="Follow" name="follow_status">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Follow</button>
+                </form>
+            {% else %}
+                <!-- Unfollow button --> 
+                <form action="{% url 'profile' user_id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="Unfollow" name="follow_status">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Unfollow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    <!-- List of posts -->
+    {% for user_posts in page_obj %}
+        <table>
+            <thead>
+                <!-- User name -->
+                <th><div>{{ user_posts.user }}</div></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="post">
+                        <!-- Post -->
+                        <div id="post{{ user_posts.id }}">{{ user_posts.post }}</div>
+                        <!-- Edit button -->
+                        {% if user.is_authenticated %}
+                            {% if user_posts.user == request.user %}
+                                <button id="edit{{ user_posts.id }}" class="edit_button btn btn-sm btn-outline-primary" data-id="{{ user_posts.id }}">Edit</button>
+                                <button id="submit{{ user_posts.id }}" class="submit_button btn btn-sm btn-outline-primary" data-id="{{ user_posts.id }}">Save</button>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <!-- Date -->
+                <tr><td><div class="date">{{ user_posts.date }}</div></td></tr>
+                <tr>
+                    <td>
+                        <!-- Number of likes -->
+                        <span id="likes_amount_{{ user_posts.id }}" class="likes_amount" data-id="{{ user_posts.id }}"></span>&#10084;
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+    <!-- Page buttons -->
+    <div class="center">
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}

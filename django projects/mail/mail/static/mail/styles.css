@@ -1,0 +1,30 @@
+textarea {
+    min-height: 400px;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.39);
+    padding: 2px;
+}
+td {
+    text-align: left;
+    vertical-align: top;
+}
+
+#message {
+    height: 400px;
+}
+
+.read_mail {
+    background-color: rgba(128, 128, 128, 0.10);
+    border-collapse: separate;
+    border-radius: 10px;
+}
+
+.unread_mail {
+    font-weight: bolder;
+}
