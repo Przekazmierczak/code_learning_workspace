@@ -38,8 +38,7 @@ class Solution:
             curr_max = max(curr_max, arr[i])
             if rest < k:
                 res = max(dfs(i + 1, rest + 1, curr_max), curr_max * rest + dfs(i + 1, 1, 0))
-            else:
-                res = curr_max * rest + dfs(i + 1, 1, 0)
+            else:                res = curr_max * rest + dfs(i + 1, 1, 0)
             memo[(i, rest)] = res
             return res
             
