@@ -1,55 +1,56 @@
 """
-Given a square matrix mat, return the sum of the matrix diagonals.
-Only include the sum of all the elements on the primary diagonal and all the elements on the secondary diagonal that are not part of the primary diagonal.
+Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.
+
+He starts by putting in $1 on Monday, the first day. Every day from Tuesday to Sunday, he will put in $1 more than the day before. On every subsequent Monday, he will put in $1 more than the previous Monday.
+Given n, return the total amount of money he will have in the Leetcode bank at the end of the nth day.
 
 Example 1:
 
-Input: mat = [[1,2,3],
-              [4,5,6],
-              [7,8,9]]
-Output: 25
-Explanation: Diagonals sum: 1 + 5 + 9 + 3 + 7 = 25
-Notice that element mat[1][1] = 5 is counted only once.
+Input: n = 4
+Output: 10
+Explanation: After the 4th day, the total is 1 + 2 + 3 + 4 = 10.
 
 Example 2:
 
-Input: mat = [[1,1,1,1],
-              [1,1,1,1],
-              [1,1,1,1],
-              [1,1,1,1]]
-Output: 8
+Input: n = 10
+Output: 37
+Explanation: After the 10th day, the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4) = 37. Notice that on the 2nd Monday, Hercy only puts in $2.
 
 Example 3:
 
-Input: mat = [[5]]
-Output: 5
+Input: n = 20
+Output: 96
+Explanation: After the 20th day, the total is (1 + 2 + 3 + 4 + 5 + 6 + 7) + (2 + 3 + 4 + 5 + 6 + 7 + 8) + (3 + 4 + 5 + 6 + 7 + 8) = 96.
 
 Constraints:
 
-n == mat.length == mat[i].length
-1 <= n <= 100
-1 <= mat[i][j] <= 100
+1 <= n <= 1000
 """
 
 class Solution:
-    # def diagonalSum(self, mat: List[List[int]]) -> int:
-    def diagonalSum(self, mat):
-        LEN, col, res = len(mat), 0, 0
+    # def totalMoney(self, n: int) -> int:
+    def totalMoney(self, n):
+        res = 0
         
-        for i in range(LEN):
-            res += mat[i][i]
-            if i != (LEN - 1 - i):
-                res += mat[i][LEN - 1 - i]
+        weeks = n // 7
+        for i in range(weeks):
+            curr = i * 7
+            res += 28 + curr
+        
+        days = n % 7
+        for j in range(days):
+            res += (j + 1) + weeks
+        
         
         return res
             
 
 def main():
-    mat = [[1,2,3],[4,5,6],[7,8,9]]
+    n = 20
 
     solution = Solution()
 
-    result = solution.diagonalSum(mat)
+    result = solution.totalMoney(n)
     
     print(result)
 
