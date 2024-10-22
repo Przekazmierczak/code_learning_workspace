@@ -86,12 +86,12 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
     return mieszkaniec;
 }
 
-char* dodaj_imię_nazwisko(struct Mieszkaniec* mieszkaniec) {
-    char* imię = imiona_męskie[rand() % 40];
-    mieszkaniec->imię = malloc(strlen(imię)+ 1);
-    if (mieszkaniec->imię == NULL) {
-        printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
-        exit(EXIT_FAILURE);
-    }
-    strcpy(mieszkaniec->imię, imię);
-}
+// char* dodaj_imię_nazwisko(struct Mieszkaniec* mieszkaniec) {
+//     char* imię = imiona_męskie[rand() % 40];
+//     mieszkaniec->imię = malloc(strlen(imię)+ 1);
+//     if (mieszkaniec->imię == NULL) {
+//         printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
+//         exit(EXIT_FAILURE);
+//     }
+//     strcpy(mieszkaniec->imię, imię);
+// }
