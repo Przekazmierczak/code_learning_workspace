@@ -77,13 +77,20 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
         mieszkaniec->pensja = 0;
     } else {
         mieszkaniec->wiek = rand() % 70;
+        mieszkaniec->pensja = 0;
         if (mieszkaniec->wiek >= 18) {
-            mieszkaniec->pensja = 5000 + (rand() % 10000);
-        } else {
-            mieszkaniec->pensja = 0;
+            int i = mieszkaniec->wiek - 18;
+            while (i >= 0 && mieszkaniec->pensja == 0) {
+                praca(mieszkaniec);
+                i--;
+            }
         }
     }
     return mieszkaniec;
+}
+
+void praca(struct Mieszkaniec* mieszkaniec) {
+    if (rand() % 10 == 0) mieszkaniec->pensja = 5000 + (rand() % 10000);
 }
 
 // char* dodaj_imię_nazwisko(struct Mieszkaniec* mieszkaniec) {

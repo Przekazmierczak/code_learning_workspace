@@ -1,5 +1,8 @@
 #include <stdbool.h>
 
+#ifndef MIESZKANIEC_H
+#define MIESZKANIEC_H
+
 struct Mieszkaniec {
     char* imię;
     char* nazwisko;
@@ -8,4 +11,7 @@ struct Mieszkaniec {
     int pensja;
 };
 
+#endif
+
 struct Mieszkaniec* stwórz_mieszkańca(bool noworodek);
+void praca(struct Mieszkaniec* mieszkaniec);
