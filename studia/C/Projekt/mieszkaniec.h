@@ -15,3 +15,4 @@ struct Mieszkaniec {
 
 struct Mieszkaniec* stwórz_mieszkańca(bool noworodek);
 void praca(struct Mieszkaniec* mieszkaniec);
+void uwolnij_mieszkańca(struct Mieszkaniec* mieszkaniec);

@@ -93,6 +93,12 @@ void praca(struct Mieszkaniec* mieszkaniec) {
     if (rand() % 10 == 0) mieszkaniec->pensja = 5000 + (rand() % 10000);
 }
 
+void uwolnij_mieszkańca(struct Mieszkaniec* mieszkaniec) {
+    free(mieszkaniec->imię);
+    free(mieszkaniec->nazwisko);
+    free(mieszkaniec);
+}
+
 // char* dodaj_imię_nazwisko(struct Mieszkaniec* mieszkaniec) {
 //     char* imię = imiona_męskie[rand() % 40];
 //     mieszkaniec->imię = malloc(strlen(imię)+ 1);
