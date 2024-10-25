@@ -11,9 +11,9 @@ struct Miasteczko* stwórz_miasteczko() {
         exit(EXIT_FAILURE);
     }
     miasteczko->mieszkańcy = NULL;
-    miasteczko->ilość_mieszkańców = 0;
-    miasteczko->rok = 2024;
-    miasteczko->budżet = 0;
+    miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
+    miasteczko->rok = 2024; // Rok początkowy
+    miasteczko->budżet = 0; // Budżet początkowy
     return miasteczko;
 }
 
@@ -25,52 +25,60 @@ void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek) {
         exit(EXIT_FAILURE);
     }
     aktualny_mieszkaniec->val = mieszkaniec;
-    aktualny_mieszkaniec->next = miasteczko->mieszkańcy;
+    aktualny_mieszkaniec->next = miasteczko->mieszkańcy; // Dodaj nowego mieszkańca na początek listy
     miasteczko->mieszkańcy = aktualny_mieszkaniec;
-    miasteczko->ilość_mieszkańców += 1;
+    miasteczko->ilość_mieszkańców += 1; // Zwiększ liczbę mieszkańców
 }
 
 void postarzej_mieszkańców(struct Miasteczko *miasteczko) {
-    miasteczko->rok += 1;
+    miasteczko->rok += 1; // Zwiększ aktualny rok
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
+
     while (aktualny_mieszkaniec != NULL) {
-        aktualny_mieszkaniec->val->wiek += 1;
-        if (aktualny_mieszkaniec->val->wiek >= 18 && aktualny_mieszkaniec->val->pensja == 0) praca(aktualny_mieszkaniec->val);
-        if (aktualny_mieszkaniec->val->wiek >= 65 && aktualny_mieszkaniec->val->pensja != 0) aktualny_mieszkaniec->val->pensja = 0;
+        aktualny_mieszkaniec->val->wiek += 1; // Zwiększ wiek aktualnego mieszkańca
+
+        // Przyznaj pracę, jeśli aktualny mieszkaniec ma 18 lat lub więcej i nie pracuje
+        if (aktualny_mieszkaniec->val->wiek >= 18 && aktualny_mieszkaniec->val->pensja == 0) {
+            praca(aktualny_mieszkaniec->val);
+        }
+
+        // Zakończ pracę gdy, aktualny mieszkaniec osiągnął wiek emerytalny
+        if (aktualny_mieszkaniec->val->wiek >= 65 && aktualny_mieszkaniec->val->pensja != 0) {
+            aktualny_mieszkaniec->val->pensja = 0;
+        }
         aktualny_mieszkaniec = aktualny_mieszkaniec->next;
     }
 }
 
 void śmierć_naturalna(struct Miasteczko *miasteczko, struct Cmentarz *cmentarz) {
-    if (miasteczko->mieszkańcy == NULL) {
-        return;
-    }
+    if (miasteczko->mieszkańcy == NULL) return; // Powróć gdy brak jest mieszkańców
 
+    // Sprawdź mieszkańców na początku listy
     while (miasteczko->mieszkańcy != NULL && szansa_na_śmierć_naturalną(miasteczko->mieszkańcy->val->wiek) > rand() % 1000) {
         dodaj_zmarłego(cmentarz, miasteczko->mieszkańcy->val, miasteczko->rok, 0);
         struct Mieszkańcy *temp = miasteczko->mieszkańcy;
-        miasteczko->mieszkańcy = miasteczko->mieszkańcy->next;
-        free(temp);
-        miasteczko->ilość_mieszkańców -= 1;
+        miasteczko->mieszkańcy = miasteczko->mieszkańcy->next; // Usuń aktualnego mieszkańca z listy
+        free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
+        miasteczko->ilość_mieszkańców -= 1; // Zmniejsz liczbę mieszkańców
     }
 
+    // Sprawdź mieszkańców w pozostałej części listy
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
     while (aktualny_mieszkaniec != NULL && aktualny_mieszkaniec->next != NULL) {
         if (szansa_na_śmierć_naturalną(aktualny_mieszkaniec->val->wiek) > rand() % 1000) {
-            dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, 0);
+            dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, 0); // Dodaje zmarłego na cmentarz
             struct Mieszkańcy *temp = aktualny_mieszkaniec->next;
-            aktualny_mieszkaniec->next = aktualny_mieszkaniec->next->next;
-            free(temp);
-            miasteczko->ilość_mieszkańców -= 1;
+            aktualny_mieszkaniec->next = aktualny_mieszkaniec->next->next; // Usuń aktualnego mieszkańca z listy
+            free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
+            miasteczko->ilość_mieszkańców -= 1; // Zmniejsza liczbę mieszkańców
         } else {
-            aktualny_mieszkaniec = aktualny_mieszkaniec->next;
+            aktualny_mieszkaniec = aktualny_mieszkaniec->next; // Przejdź do kolejnego mieszkańca
         }
     }
 }
 
 int szansa_na_śmierć_naturalną(int wiek) {
-    int przedział = wiek / 20;
-
+    int przedział = wiek / 20; // Podziel wiek na przedziały co 20 lat
     switch (przedział) {
         case 0:  // Wiek 0-19
             return 1;
@@ -84,7 +92,7 @@ int szansa_na_śmierć_naturalną(int wiek) {
             return 200;
         case 5:  // Wiek 100-119
             return 500;
-        default: // Wiek 120 and above
+        default: // Wiek 120 i wyżej
             return 800;
     }
 }
@@ -92,6 +100,7 @@ int szansa_na_śmierć_naturalną(int wiek) {
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
     while (aktualny_mieszkaniec != NULL) {
+        // Wydrukuj dane aktualnego mieszkańca
         printf("%s %s Płeć: %c Wiek: %i Pensja: %i\n",
             aktualny_mieszkaniec->val->imię,
             aktualny_mieszkaniec->val->nazwisko,
@@ -99,7 +108,7 @@ void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
             aktualny_mieszkaniec->val->wiek,
             aktualny_mieszkaniec->val->pensja
             );
-        aktualny_mieszkaniec = aktualny_mieszkaniec->next;
+        aktualny_mieszkaniec = aktualny_mieszkaniec->next; // Przejdź do kolejnego mieszkańca
     }
 }
 

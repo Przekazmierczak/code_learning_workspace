@@ -35,9 +35,15 @@ char* nazwiska_żeńskie[40] = {
 
 struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
     struct Mieszkaniec* mieszkaniec = malloc(sizeof(struct Mieszkaniec));
+    if (mieszkaniec == NULL) {
+        printf("Błąd: Nie udało się przydzielić pamięci dla struktury mieszkaniecw stwórz_mieszkańca.\n");
+        exit(EXIT_FAILURE);
+    }
 
+    // Losuj płeć mieszkańca
     mieszkaniec->płeć = rand() % 2 ? 'm' : 'k';
 
+    // Przydziel imię i nazwisko w zależności od płci
     if (mieszkaniec->płeć == 'm') {
         char* imię = imiona_męskie[rand() % 40];
         mieszkaniec->imię = malloc(strlen(imię)+ 1);
@@ -72,12 +78,14 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
         strcpy(mieszkaniec->nazwisko, nazwisko);
     }
 
+    // Ustaw wiek i pensję mieszkańca w zależności od tego, czy jest noworodkiem
     if (noworodek) {
         mieszkaniec->wiek = 0;
         mieszkaniec->pensja = 0;
     } else {
         mieszkaniec->wiek = rand() % 70;
         mieszkaniec->pensja = 0;
+        // W przypadku w którym mieszkaniec ma co najmniej 18 lat, losuj czy posiada pracę
         if (mieszkaniec->wiek >= 18) {
             int i = mieszkaniec->wiek - 18;
             while (i >= 0 && mieszkaniec->pensja == 0) {
@@ -89,6 +97,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
     return mieszkaniec;
 }
 
+// Spróbuj przydzielić pracę mieszkańcowi, oraz ustawial losową pensję
 void praca(struct Mieszkaniec* mieszkaniec) {
     if (rand() % 10 == 0) mieszkaniec->pensja = 5000 + (rand() % 10000);
 }
@@ -98,13 +107,3 @@ void uwolnij_mieszkańca(struct Mieszkaniec* mieszkaniec) {
     free(mieszkaniec->nazwisko);
     free(mieszkaniec);
 }
-
-// char* dodaj_imię_nazwisko(struct Mieszkaniec* mieszkaniec) {
-//     char* imię = imiona_męskie[rand() % 40];
-//     mieszkaniec->imię = malloc(strlen(imię)+ 1);
-//     if (mieszkaniec->imię == NULL) {
-//         printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
-//         exit(EXIT_FAILURE);
-//     }
-//     strcpy(mieszkaniec->imię, imię);
-// }
