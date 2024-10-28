@@ -46,54 +46,8 @@ void postarzej_mieszkańców(struct Miasteczko *miasteczko) {
         if (aktualny_mieszkaniec->val->wiek >= 65 && aktualny_mieszkaniec->val->pensja != 0) {
             aktualny_mieszkaniec->val->pensja = 0;
         }
+        miasteczko->budżet += aktualny_mieszkaniec->val->pensja * 0.3;
         aktualny_mieszkaniec = aktualny_mieszkaniec->next;
-    }
-}
-
-void śmierć_naturalna(struct Miasteczko *miasteczko, struct Cmentarz *cmentarz) {
-    if (miasteczko->mieszkańcy == NULL) return; // Powróć gdy brak jest mieszkańców
-
-    // Sprawdź mieszkańców na początku listy
-    while (miasteczko->mieszkańcy != NULL && szansa_na_śmierć_naturalną(miasteczko->mieszkańcy->val->wiek) > rand() % 1000) {
-        dodaj_zmarłego(cmentarz, miasteczko->mieszkańcy->val, miasteczko->rok, 0);
-        struct Mieszkańcy *temp = miasteczko->mieszkańcy;
-        miasteczko->mieszkańcy = miasteczko->mieszkańcy->next; // Usuń aktualnego mieszkańca z listy
-        free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
-        miasteczko->ilość_mieszkańców -= 1; // Zmniejsz liczbę mieszkańców
-    }
-
-    // Sprawdź mieszkańców w pozostałej części listy
-    struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
-    while (aktualny_mieszkaniec != NULL && aktualny_mieszkaniec->next != NULL) {
-        if (szansa_na_śmierć_naturalną(aktualny_mieszkaniec->val->wiek) > rand() % 1000) {
-            dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, 0); // Dodaje zmarłego na cmentarz
-            struct Mieszkańcy *temp = aktualny_mieszkaniec->next;
-            aktualny_mieszkaniec->next = aktualny_mieszkaniec->next->next; // Usuń aktualnego mieszkańca z listy
-            free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
-            miasteczko->ilość_mieszkańców -= 1; // Zmniejsza liczbę mieszkańców
-        } else {
-            aktualny_mieszkaniec = aktualny_mieszkaniec->next; // Przejdź do kolejnego mieszkańca
-        }
-    }
-}
-
-int szansa_na_śmierć_naturalną(int wiek) {
-    int przedział = wiek / 20; // Podziel wiek na przedziały co 20 lat
-    switch (przedział) {
-        case 0:  // Wiek 0-19
-            return 1;
-        case 1:  // Wiek 20-39
-            return 3;
-        case 2:  // Wiek 40-59
-            return 5;
-        case 3:  // Wiek 60-79
-            return 50;
-        case 4:  // Wiek 80-99
-            return 200;
-        case 5:  // Wiek 100-119
-            return 500;
-        default: // Wiek 120 i wyżej
-            return 800;
     }
 }
 

@@ -39,7 +39,7 @@ void powiększ_cmentarz(struct Cmentarz *cmentarz) {
         exit(EXIT_FAILURE);
     }
 
-    // AlokUJ pamięĆ dla nowego rzędu
+    // Alokuj pamięĆ dla nowego rzędu
     cmentarz->aleja[cmentarz->ilość_rzędów - 1] = malloc(cmentarz->ilość_pozycji * sizeof(struct Grób*));
     if (cmentarz->aleja[cmentarz->ilość_rzędów - 1] == NULL) {
         printf("Błąd: Nie udało się przydzielić pamięci dla cmentarz->aleja[cmentarz->ilość_rzędów - 1] w powiększ_cmentarz.\n");

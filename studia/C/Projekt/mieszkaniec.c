@@ -99,7 +99,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
 
 // Spróbuj przydzielić pracę mieszkańcowi, oraz ustawial losową pensję
 void praca(struct Mieszkaniec* mieszkaniec) {
-    if (rand() % 10 == 0) mieszkaniec->pensja = 5000 + (rand() % 10000);
+    if (rand() % 5 == 0) mieszkaniec->pensja = 5000 + (rand() % 10000);
 }
 
 void uwolnij_mieszkańca(struct Mieszkaniec* mieszkaniec) {

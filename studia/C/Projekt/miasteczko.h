@@ -13,6 +13,8 @@ struct Miasteczko {
     int ilość_mieszkańców;
     int rok;
     int budżet;
+    int szpitale;
+    int straż_pożarna;
 };
 
 #endif
@@ -20,7 +22,5 @@ struct Miasteczko {
 struct Miasteczko* stwórz_miasteczko();
 void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek);
 void postarzej_mieszkańców(struct Miasteczko *miasteczko);
-void śmierć_naturalna(struct Miasteczko *miasteczko, struct Cmentarz *cmentarz);
-int szansa_na_śmierć_naturalną(int wiek);
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko);
 void uwolnij_mieszkańców(struct Miasteczko *miasteczko);

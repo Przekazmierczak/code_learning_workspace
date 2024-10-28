@@ -6,6 +6,7 @@
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
+#include "smierc.h"
 
 int main() {
     setlocale(LC_ALL, "pl_PL.UTF-8");
@@ -27,7 +28,7 @@ int main() {
 
         // Wyświetl informację o cmentarzu
         printf("----------------Cmentarz----------------------\n");
-        if (miasteczko->ilość_mieszkańców <= 250) {
+        if (cmentarz->ilość_rzędów <= 6) {
             lista_osób_na_cmenatrzu(cmentarz);
         } else {
             printf("Ilość rzędów: %i, ilość pozycji: %i\n", cmentarz->ilość_rzędów, cmentarz->ilość_pozycji);
@@ -43,14 +44,24 @@ int main() {
 
         // Zwiększ wiek wszystkich mieszkańców
         postarzej_mieszkańców(miasteczko);
+
+        bool pożar = (rand() % 25 == 0);
+        if (pożar) printf("******************POŻAR***********************\n");
+        bool powódź = (rand() % 25 == 0);
+        if (powódź) printf("*****************POWÓDŹ**********************\n");
+        bool trzęsienie_ziemi = (rand() % 25 == 0);
+        if (trzęsienie_ziemi) printf("************TRZĘSIENIE ZIEMI*****************\n");
+
         // Sprawdź, czy któryś z mieszkańców umarł, jeżeli tak, usuń go z listy mieszkańców i dodaj na cmentarz
-        śmierć_naturalna(miasteczko, cmentarz);
+        śmierć_mieszkańców(miasteczko, cmentarz, pożar, powódź, trzęsienie_ziemi);
         // Dodaj nowych mieszkańców do miasteczka, liczba nowych osób zależy od liczby aktualnych mieszkańców
         for (int i = 0; i < (miasteczko->ilość_mieszkańców) / 50 + 1; i++) {
             dodaj_mieszkańca(miasteczko, true);
         }
-        Sleep(1000);
 
+        printf("Budżet: %i\n", miasteczko->budżet);
+
+        Sleep(100);
     }
 
     return EXIT_SUCCESS;
