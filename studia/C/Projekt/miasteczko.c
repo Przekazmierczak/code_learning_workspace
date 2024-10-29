@@ -3,6 +3,7 @@
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
+#include "budynki.h"
 
 struct Miasteczko* stwórz_miasteczko() {
     struct Miasteczko *miasteczko = malloc(sizeof(struct Miasteczko));
@@ -13,7 +14,14 @@ struct Miasteczko* stwórz_miasteczko() {
     miasteczko->mieszkańcy = NULL;
     miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
     miasteczko->rok = 2024; // Rok początkowy
-    miasteczko->budżet = 0; // Budżet początkowy
+    miasteczko->budżet = 20000000; // Budżet początkowy
+
+    int ilość_pozycji = 10;
+    miasteczko->cmentarz = stwórz_cmentarz(ilość_pozycji);
+
+    miasteczko->szpitale = 1; // Ilość szpitali
+    miasteczko->straż_pożarna = 1; // Ilość budynków straży pożarnej
+    miasteczko->szkoły = 1; // Ilość budynków szkolnych
     return miasteczko;
 }
 
@@ -46,7 +54,7 @@ void postarzej_mieszkańców(struct Miasteczko *miasteczko) {
         if (aktualny_mieszkaniec->val->wiek >= 65 && aktualny_mieszkaniec->val->pensja != 0) {
             aktualny_mieszkaniec->val->pensja = 0;
         }
-        miasteczko->budżet += aktualny_mieszkaniec->val->pensja * 0.3;
+        miasteczko->budżet += (int)(aktualny_mieszkaniec->val->pensja * 0.3 * szkoła(miasteczko->ilość_mieszkańców / miasteczko->szkoły));
         aktualny_mieszkaniec = aktualny_mieszkaniec->next;
     }
 }

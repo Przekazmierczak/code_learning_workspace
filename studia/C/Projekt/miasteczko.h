@@ -12,9 +12,11 @@ struct Miasteczko {
     struct Mieszkańcy* mieszkańcy;
     int ilość_mieszkańców;
     int rok;
-    int budżet;
+    long long budżet;
+    struct Cmentarz* cmentarz;
     int szpitale;
     int straż_pożarna;
+    int szkoły;
 };
 
 #endif

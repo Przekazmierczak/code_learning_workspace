@@ -4,6 +4,7 @@
 #include "miasteczko.h"
 #include "cmentarz.h"
 #include "smierc.h"
+#include "budynki.h"
 
 void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmentarz, bool pożar, bool powódź, bool trzęsienie_ziemi) {
     if (miasteczko->mieszkańcy == NULL) return; // Powróć gdy brak jest mieszkańców
@@ -14,13 +15,13 @@ void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmen
         int szansa_na_śmierc = szansa_na_śmierć_naturalną(miasteczko->mieszkańcy->val->wiek);
         śmierć_pierwszego_mieszkańca = false;
         if (pożar) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_pożaru();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_pożaru(miasteczko);
         }
         if (powódź) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_powodzi();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_powodzi(miasteczko);
         }
         if (trzęsienie_ziemi) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(miasteczko);
         }
         if (szansa_na_śmierc > rand() % 1000) {
             dodaj_zmarłego(cmentarz, miasteczko->mieszkańcy->val, miasteczko->rok, 0);
@@ -37,13 +38,13 @@ void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmen
     while (aktualny_mieszkaniec != NULL && aktualny_mieszkaniec->next != NULL) {
         int szansa_na_śmierc = szansa_na_śmierć_naturalną(miasteczko->mieszkańcy->val->wiek);
         if (pożar) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_pożaru();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_pożaru(miasteczko);
         }
         if (powódź) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_powodzi();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_powodzi(miasteczko);
         }
         if (trzęsienie_ziemi) {
-            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi();
+            szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(miasteczko);
         }
         if (szansa_na_śmierc > rand() % 1000) {
             dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, 0); // Dodaje zmarłego na cmentarz
@@ -77,14 +78,14 @@ int szansa_na_śmierć_naturalną(int wiek) {
     }
 }
 
-int szansa_na_śmierć_w_przypadku_pożaru() {
-    return 150;
+int szansa_na_śmierć_w_przypadku_pożaru(struct Miasteczko *miasteczko) {
+    return 150 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }
 
-int szansa_na_śmierć_w_przypadku_powodzi() {
-    return 100;
+int szansa_na_śmierć_w_przypadku_powodzi(struct Miasteczko *miasteczko) {
+    return 100 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }
 
-int szansa_na_śmierć_w_przypadku_trzęsienia_ziemi() {
-    return 50;
+int szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(struct Miasteczko *miasteczko) {
+    return 50 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }
