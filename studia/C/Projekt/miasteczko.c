@@ -14,7 +14,7 @@ struct Miasteczko* stwórz_miasteczko() {
     miasteczko->mieszkańcy = NULL;
     miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
     miasteczko->rok = 2024; // Rok początkowy
-    miasteczko->budżet = 20000000; // Budżet początkowy
+    miasteczko->budżet = 0; // Budżet początkowy
 
     int ilość_pozycji = 10;
     miasteczko->cmentarz = stwórz_cmentarz(ilość_pozycji);
@@ -38,7 +38,8 @@ void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek) {
     miasteczko->ilość_mieszkańców += 1; // Zwiększ liczbę mieszkańców
 }
 
-void postarzej_mieszkańców(struct Miasteczko *miasteczko) {
+// Zwiększ wiek, przydziel pracę, wyślij na emeryturę oraz zbierz podatki od wszystkich mieszkańców
+void zarządzaj_mieszkańcami(struct Miasteczko *miasteczko) {
     miasteczko->rok += 1; // Zwiększ aktualny rok
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
 
@@ -54,6 +55,7 @@ void postarzej_mieszkańców(struct Miasteczko *miasteczko) {
         if (aktualny_mieszkaniec->val->wiek >= 65 && aktualny_mieszkaniec->val->pensja != 0) {
             aktualny_mieszkaniec->val->pensja = 0;
         }
+        // Zbierz podatki - wysokość podatków zwiększona jest dodatkowo od wartość stosunku ilości mieszkańców do ilości szkół
         miasteczko->budżet += (int)(aktualny_mieszkaniec->val->pensja * 0.3 * szkoła(miasteczko->ilość_mieszkańców / miasteczko->szkoły));
         aktualny_mieszkaniec = aktualny_mieszkaniec->next;
     }

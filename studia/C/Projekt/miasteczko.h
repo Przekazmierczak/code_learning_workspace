@@ -23,6 +23,6 @@ struct Miasteczko {
 
 struct Miasteczko* stwórz_miasteczko();
 void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek);
-void postarzej_mieszkańców(struct Miasteczko *miasteczko);
+void zarządzaj_mieszkańcami(struct Miasteczko *miasteczko);
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko);
 void uwolnij_mieszkańców(struct Miasteczko *miasteczko);
