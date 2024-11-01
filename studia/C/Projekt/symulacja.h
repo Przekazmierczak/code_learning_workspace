@@ -1,0 +1,1 @@
+void symulacja(struct Miasteczko *miasteczko);

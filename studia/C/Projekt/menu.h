@@ -1,0 +1,1 @@
+void menu(struct Miasteczko *miasteczko);

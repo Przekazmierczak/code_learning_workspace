@@ -5,7 +5,7 @@
 #include "cmentarz.h"
 #include "budynki.h"
 
-struct Miasteczko* stwórz_miasteczko() {
+struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
     struct Miasteczko *miasteczko = malloc(sizeof(struct Miasteczko));
     if (miasteczko == NULL) {
         printf("Błąd: Nie udało się przydzielić pamięci dla miasteczka w stwórz_miasteczko.\n");
@@ -14,7 +14,7 @@ struct Miasteczko* stwórz_miasteczko() {
     miasteczko->mieszkańcy = NULL;
     miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
     miasteczko->rok = 2024; // Rok początkowy
-    miasteczko->budżet = 0; // Budżet początkowy
+    miasteczko->budżet = budżet; // Budżet początkowy
 
     int ilość_pozycji = 10;
     miasteczko->cmentarz = stwórz_cmentarz(ilość_pozycji);
@@ -22,6 +22,12 @@ struct Miasteczko* stwórz_miasteczko() {
     miasteczko->szpitale = 1; // Ilość szpitali
     miasteczko->straż_pożarna = 1; // Ilość budynków straży pożarnej
     miasteczko->szkoły = 1; // Ilość budynków szkolnych
+
+    // Dodaj początkowych mieszkańców do miasteczka
+    for (int i = 0; i < liczba_mieszkańców; i++) {
+        dodaj_mieszkańca(miasteczko, false);
+    }
+
     return miasteczko;
 }
 
