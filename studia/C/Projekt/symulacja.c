@@ -91,7 +91,7 @@ void symulacja(struct Miasteczko *miasteczko) {
         if (_kbhit()) {  // Nasłuchuj wciśnięcia przycisku
             _getch();   // Wszytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
             system("cls");
-            menu(miasteczko);
+            return;
         }
         Sleep(300);
     }

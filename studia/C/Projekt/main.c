@@ -22,10 +22,26 @@ int main() {
     printf("Witaj w symulacji miasta!\n");
 
     printf("Podaj początkową liczbę mieszkańców: ");
-    scanf_s("%i", &liczba_mieszkańców);
+    int input_mieszkańcy = 0;
+    while (input_mieszkańcy != 1) {
+        input_mieszkańcy = scanf_s("%i", &liczba_mieszkańców);
+        if (input_mieszkańcy != 1) {
+            printf("Podaj początkową liczbę mieszkańców (w formacie liczbowym): ");
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+    }
 
     printf("Podaj budżet początkowy: ");
-    scanf_s("%i", &budżet);
+    int input_budżet = 0;
+    while (input_budżet != 1) {
+        input_budżet = scanf_s("%i", &budżet);
+        if (input_budżet != 1) {
+            printf("Podaj budżet początkowy (w formacie liczbowym): ");
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+    }
     
     struct Miasteczko *miasteczko = stwórz_miasteczko(liczba_mieszkańców, budżet);
 

@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
 #include "budynki.h"
+#include "menu.h"
 
 struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
     struct Miasteczko *miasteczko = malloc(sizeof(struct Miasteczko));
@@ -67,11 +69,27 @@ void zarządzaj_mieszkańcami(struct Miasteczko *miasteczko) {
     }
 }
 
+void informacje_o_miasteczku(struct Miasteczko *miasteczko) {
+    system("cls");
+    printf("Rok: %i\n", miasteczko->rok);
+    printf("Budżet: %lli\n", miasteczko->budżet);
+    printf("Ilość mieszkańców: %i\n", miasteczko->ilość_mieszkańców);
+    printf("Wielkość cmentarza: %i rzędów\n", miasteczko->cmentarz->ilość_rzędów);
+    printf("Ilość szpitali: %i\n", miasteczko->szpitale);
+    printf("Ilość budynków straży pożarnej: %i\n", miasteczko->straż_pożarna);
+    printf("Ilość budynków szkolnych: %i\n", miasteczko->szkoły);
+    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
+    _getch();
+}
+
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
+    system("cls");
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
+    int count = 1;
     while (aktualny_mieszkaniec != NULL) {
         // Wydrukuj dane aktualnego mieszkańca
-        printf("%s %s Płeć: %c Wiek: %i Pensja: %i\n",
+        printf("%i: %s %s Płeć: %c Wiek: %i Pensja: %i\n",
+            count,
             aktualny_mieszkaniec->val->imię,
             aktualny_mieszkaniec->val->nazwisko,
             aktualny_mieszkaniec->val->płeć,
@@ -79,7 +97,10 @@ void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
             aktualny_mieszkaniec->val->pensja
             );
         aktualny_mieszkaniec = aktualny_mieszkaniec->next; // Przejdź do kolejnego mieszkańca
+        count++;
     }
+    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
+    _getch();
 }
 
 void uwolnij_mieszkańców(struct Miasteczko *miasteczko) {

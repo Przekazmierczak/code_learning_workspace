@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "mieszkaniec.h"
 #include "cmentarz.h"
 
@@ -96,6 +97,7 @@ int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci) {
 }
 
 void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz) {
+    system("cls");
     for (int i = 0; i < cmentarz->ilość_rzędów; i++) {
         for (int j = 0; j < cmentarz->ilość_pozycji; j++) {
             printf("W rzędzie nr %i w miejscu nr %i spoczywa: ", i, j);
@@ -109,4 +111,6 @@ void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz) {
             }
         }
     }
+    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
+    _getch();
 }
