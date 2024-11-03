@@ -53,7 +53,7 @@ void powiększ_cmentarz(struct Cmentarz *cmentarz) {
     }
 }
 
-void dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec, int rok_śmierci, int rząd_startowy) {
+int dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec, int rok_śmierci, int rząd_startowy) {
     int i = rząd_startowy;
     for (; i < cmentarz->ilość_rzędów; i++) {
         for (int j = 0; j < cmentarz->ilość_pozycji; j++) {
@@ -73,13 +73,14 @@ void dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec,
                 // Umieść nowego zmarłego i oblicz roku likwidacji grobu
                 cmentarz->aleja[i][j]->zmarły = mieszkaniec;
                 cmentarz->aleja[i][j]->rok_likwidacji = określ_rok_likwidacji(mieszkaniec, rok_śmierci);
-                return;
+                return i;
             }
         }
     }
     // Jeśli nie znaleziono miejsca, powiększ cmentarz i dodaJ zmarłego do nowego rzędu
     powiększ_cmentarz(cmentarz);
     dodaj_zmarłego(cmentarz, mieszkaniec, rok_śmierci, cmentarz->ilość_rzędów - 1);
+    return cmentarz->ilość_rzędów - 1;
 }
 
 int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci) {

@@ -9,6 +9,8 @@
 void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmentarz, bool pożar, bool powódź, bool trzęsienie_ziemi) {
     if (miasteczko->mieszkańcy == NULL) return; // Powróć gdy brak jest mieszkańców
 
+    int aktualny_rząd = 0;
+
     // Sprawdź mieszkańców na początku listy
     bool śmierć_pierwszego_mieszkańca = true;
     while (miasteczko->mieszkańcy != NULL && śmierć_pierwszego_mieszkańca) {
@@ -24,7 +26,7 @@ void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmen
             szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(miasteczko);
         }
         if (szansa_na_śmierc > rand() % 1000) {
-            dodaj_zmarłego(cmentarz, miasteczko->mieszkańcy->val, miasteczko->rok, 0);
+            aktualny_rząd = dodaj_zmarłego(cmentarz, miasteczko->mieszkańcy->val, miasteczko->rok, aktualny_rząd);
             struct Mieszkańcy *temp = miasteczko->mieszkańcy;
             miasteczko->mieszkańcy = miasteczko->mieszkańcy->next; // Usuń aktualnego mieszkańca z listy
             free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
@@ -47,7 +49,7 @@ void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmen
             szansa_na_śmierc += szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(miasteczko);
         }
         if (szansa_na_śmierc > rand() % 1000) {
-            dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, 0); // Dodaje zmarłego na cmentarz
+            aktualny_rząd = dodaj_zmarłego(cmentarz, aktualny_mieszkaniec->next->val, miasteczko->rok, aktualny_rząd); // Dodaje zmarłego na cmentarz
             struct Mieszkańcy *temp = aktualny_mieszkaniec->next;
             aktualny_mieszkaniec->next = aktualny_mieszkaniec->next->next; // Usuń aktualnego mieszkańca z listy
             free(temp); // Zwolnij pamięć zarezerwowaną na aktualnego mieszkańca
