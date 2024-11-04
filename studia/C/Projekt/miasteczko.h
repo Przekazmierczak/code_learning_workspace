@@ -17,6 +17,7 @@ struct Miasteczko {
     int szpitale;
     int straż_pożarna;
     int szkoły;
+    char*** lista_możliwych_imion;
 };
 
 #endif

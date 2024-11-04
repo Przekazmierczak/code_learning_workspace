@@ -53,34 +53,36 @@ void powiększ_cmentarz(struct Cmentarz *cmentarz) {
     }
 }
 
-int dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec, int rok_śmierci, int rząd_startowy) {
-    int i = rząd_startowy;
-    for (; i < cmentarz->ilość_rzędów; i++) {
-        for (int j = 0; j < cmentarz->ilość_pozycji; j++) {
+void dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec, int rok_śmierci, int *rząd, int *pozycja) {
+    for (; *rząd < cmentarz->ilość_rzędów; (*rząd)++) {
+        for (; *pozycja < cmentarz->ilość_pozycji; (*pozycja)++) {
             // Sprawdź, czy miejsce jest puste lub czy grób kwalifikuje się do likwidacji
-            if (cmentarz->aleja[i][j] == NULL || cmentarz->aleja[i][j]->rok_likwidacji < rok_śmierci) {
+            if (cmentarz->aleja[*rząd][*pozycja] == NULL || cmentarz->aleja[*rząd][*pozycja]->rok_likwidacji < rok_śmierci) {
                 // Jeśli miejsce jest wolne, alokuj pamięć dla nowego grobu
-                if (cmentarz->aleja[i][j] == NULL) {
-                    cmentarz->aleja[i][j] = malloc(sizeof(struct Grób));
-                    if (cmentarz->aleja[i][j] == NULL) {
+                if (cmentarz->aleja[*rząd][*pozycja] == NULL) {
+                    cmentarz->aleja[*rząd][*pozycja] = malloc(sizeof(struct Grób));
+                    if (cmentarz->aleja[*rząd][*pozycja] == NULL) {
                         printf("Błąd: Nie udało się przydzielić pamięci dla cmentarz->aleja[i][j] w dodaj_zmarłego.\n");
                         exit(EXIT_FAILURE);
                     }
                 // Jeśli grób jest już zajęty, uwalnij pamięć poprzedniego zmarłego
                 } else {
-                    uwolnij_mieszkańca(cmentarz->aleja[i][j]->zmarły);
+                    uwolnij_mieszkańca(cmentarz->aleja[*rząd][*pozycja]->zmarły);
                 }
                 // Umieść nowego zmarłego i oblicz roku likwidacji grobu
-                cmentarz->aleja[i][j]->zmarły = mieszkaniec;
-                cmentarz->aleja[i][j]->rok_likwidacji = określ_rok_likwidacji(mieszkaniec, rok_śmierci);
-                return i;
+                cmentarz->aleja[*rząd][*pozycja]->zmarły = mieszkaniec;
+                cmentarz->aleja[*rząd][*pozycja]->rok_likwidacji = określ_rok_likwidacji(mieszkaniec, rok_śmierci);
+                (*pozycja)++;
+                return;
             }
         }
+        *pozycja = 0;
     }
     // Jeśli nie znaleziono miejsca, powiększ cmentarz i dodaJ zmarłego do nowego rzędu
     powiększ_cmentarz(cmentarz);
-    dodaj_zmarłego(cmentarz, mieszkaniec, rok_śmierci, cmentarz->ilość_rzędów - 1);
-    return cmentarz->ilość_rzędów - 1;
+    *pozycja = 0;
+    dodaj_zmarłego(cmentarz, mieszkaniec, rok_śmierci, rząd, pozycja);
+    return;
 }
 
 int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci) {

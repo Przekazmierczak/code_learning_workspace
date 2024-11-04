@@ -93,7 +93,7 @@ void symulacja(struct Miasteczko *miasteczko) {
             system("cls");
             return;
         }
-        Sleep(300);
+        Sleep(100);
     }
 }
     

@@ -5,35 +5,50 @@
 #include <string.h>
 #include "mieszkaniec.h"
 
-char* imiona_męskie[40] = {
-    "Antoni", "Jan", "Aleksander", "Nikodem", "Franciszek", "Jakub", "Leon", "Mikołaj", "Stanisław", "Filip",
-    "Ignacy", "Szymon", "Wojciech", "Adam", "Kacper", "Tymon", "Marcel", "Maksymilian", "Michał", "Wiktor",
-    "Oliwier", "Tymoteusz", "Miłosz", "Igor", "Julian", "Piotr", "Oskar", "Gabriel", "Dawid", "Krzysztof",
-    "Bartosz", "Dominik", "Natan", "Bruno", "Mateusz", "Hubert", "Karol", "Alan", "Fabian", "Tomasz"
-};
+char*** wczytaj_listę_imion_z_pliku() {
+    char ***lista_możliwych_imion = malloc(4 * sizeof(char**));
+    for (int i = 0; i < 4; i++) {
+        lista_możliwych_imion[i] = malloc(40 * sizeof(char*));
+        for (int j = 0; j < 40; j++) {
+            lista_możliwych_imion[i][j] = malloc(20 * sizeof(char));
+        }
+    }
+    
+    char buffer[10000];
+    int linia = 0;
 
-char* imiona_żeńskie[40] = {
-    "Zofia", "Zuzanna", "Hanna", "Laura", "Maja", "Julia", "Oliwia", "Alicja", "Pola", "Lena",
-    "Maria", "Emilia", "Amelia", "Antonina", "Wiktoria", "Liliana", "Iga", "Michalina", "Marcelina", "Helena",
-    "Klara", "Aleksandra", "Gabriela", "Anna", "Kornelia", "Łucja", "Blanka", "Nela", "Nadia", "Natalia",
-    "Jagoda", "Lilianna", "Milena", "Anastazja", "Mia", "Kaja", "Nikola", "Nina", "Weronika", "Róża"
-};
+    FILE *file = fopen("imiona.txt", "r");
 
-char* nazwiska_męskie[40] = {
-    "Nowak", "Kowalski", "Wiśniewski", "Wójcik", "Kowalczyk", "Kamiński", "Lewandowski", "Zieliński", "Woźniak", "Szymański",
-    "Dąbrowski", "Kozłowski", "Mazur", "Jankowski", "Kwiatkowski", "Wojciechowski", "Krawczyk", "Kaczmarek", "Piotrowski", "Grabowski",
-    "Zajac", "Pawłowski", "Król", "Michałski", "Wróbel", "Wieczorek", "Jabłoński", "Nowakowski", "Majewski", "Olszewski",
-    "Dudek", "Stępień", "Jaworski", "Malinowski", "Górski", "Pawlak", "Nowicki", "Sikora", "Witkowski", "Rutkowski"
-};
+    if (file == NULL) {
+        printf("Nie udało otworzyć się pliku imiona.txt\n");
+        exit(EXIT_FAILURE);
+    } else {
+        while (!feof(file) && !ferror(file)) {
+            if (fgets(buffer, 10000, file) != NULL) {
+                int litera_linia = 0;
+                int litera_imię = 0;
+                int imię = 0;
+                while (buffer[litera_linia] != '\0') {
+                    if (buffer[litera_linia] != ' ' && buffer[litera_linia] != '\n') {
+                        lista_możliwych_imion[linia][imię][litera_imię] = buffer[litera_linia];
+                        litera_imię++;
+                    } else {
+                        lista_możliwych_imion[linia][imię][litera_imię] = '\0';
+                        imię ++;
+                        litera_imię = 0;
+                    }
+                    litera_linia++;
+                }
+                linia++;
+            }
+        }
+    }
 
-char* nazwiska_żeńskie[40] = {
-    "Nowak", "Kowalska", "Wiśniewska", "Wójcik", "Kowalczyk", "Kamińska", "Lewandowska", "Zielińska", "Woźniak", "Szymańska",
-    "Dąbrowska", "Kozłowska", "Mazur", "Jankowska", "Kwiatkowska", "Wojciechowska", "Krawczyk", "Kaczmarek", "Piotrowska", "Grabowska",
-    "Pawłowska", "Zając", "Królowa", "Michałska", "Wróblewska", "Wieczorek", "Jabłońska", "Nowakowska", "Majewska", "Olszewska",
-    "Dudek", "Stępień", "Jaworska", "Malinowska", "Górska", "Pawlak", "Nowicka", "Sikora", "Witkowska", "Rutkowska"
-};
+    fclose(file);
+    return lista_możliwych_imion;
+}
 
-struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
+struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych_imion) {
     struct Mieszkaniec* mieszkaniec = malloc(sizeof(struct Mieszkaniec));
     if (mieszkaniec == NULL) {
         printf("Błąd: Nie udało się przydzielić pamięci dla struktury mieszkaniecw stwórz_mieszkańca.\n");
@@ -45,7 +60,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
 
     // Przydziel imię i nazwisko w zależności od płci
     if (mieszkaniec->płeć == 'm') {
-        char* imię = imiona_męskie[rand() % 40];
+        char* imię = lista_możliwych_imion[0][rand() % 40];
         mieszkaniec->imię = malloc(strlen(imię)+ 1);
         if (mieszkaniec->imię == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
@@ -53,7 +68,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
         }
         strcpy(mieszkaniec->imię, imię);
     
-        char* nazwisko = nazwiska_męskie[rand() % 40];
+        char* nazwisko = lista_możliwych_imion[2][rand() % 40];
         mieszkaniec->nazwisko = malloc(strlen(nazwisko)+ 1);
         if (mieszkaniec->nazwisko == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");
@@ -61,7 +76,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
         }
         strcpy(mieszkaniec->nazwisko, nazwisko);
     } else {
-        char* imię = imiona_żeńskie[rand() % 40];
+        char* imię = lista_możliwych_imion[1][rand() % 40];
         mieszkaniec->imię = malloc(strlen(imię)+ 1);
         if (mieszkaniec->imię == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
@@ -69,7 +84,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek) {
         }
         strcpy(mieszkaniec->imię, imię);
 
-        char* nazwisko = nazwiska_żeńskie[rand() % 40];
+        char* nazwisko = lista_możliwych_imion[3][rand() % 40];
         mieszkaniec->nazwisko = malloc(strlen(nazwisko)+ 1);
         if (mieszkaniec->nazwisko == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");

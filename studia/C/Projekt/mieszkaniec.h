@@ -13,6 +13,7 @@ struct Mieszkaniec {
 
 #endif
 
-struct Mieszkaniec* stwórz_mieszkańca(bool noworodek);
+char*** wczytaj_listę_imion_z_pliku();
+struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_imion);
 void praca(struct Mieszkaniec* mieszkaniec);
 void uwolnij_mieszkańca(struct Mieszkaniec* mieszkaniec);

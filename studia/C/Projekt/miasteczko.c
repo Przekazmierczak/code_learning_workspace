@@ -25,6 +25,8 @@ struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
     miasteczko->straż_pożarna = 1; // Ilość budynków straży pożarnej
     miasteczko->szkoły = 1; // Ilość budynków szkolnych
 
+    miasteczko->lista_możliwych_imion = wczytaj_listę_imion_z_pliku();
+
     // Dodaj początkowych mieszkańców do miasteczka
     for (int i = 0; i < liczba_mieszkańców; i++) {
         dodaj_mieszkańca(miasteczko, false);
@@ -34,7 +36,7 @@ struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
 }
 
 void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek) {
-    struct Mieszkaniec *mieszkaniec = stwórz_mieszkańca(noworodek);
+    struct Mieszkaniec *mieszkaniec = stwórz_mieszkańca(noworodek, miasteczko->lista_możliwych_imion);
     struct Mieszkańcy *aktualny_mieszkaniec = malloc(sizeof(struct Mieszkańcy));
     if (aktualny_mieszkaniec == NULL) {
         printf("Błąd: Nie udało się przydzielić pamięci dla węzła w dodaj_mieszkańca.\n");
