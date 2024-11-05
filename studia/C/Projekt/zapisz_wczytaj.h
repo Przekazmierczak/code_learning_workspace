@@ -1,0 +1,1 @@
+void zapisz_do_pliku(struct Miasteczko *miasteczko);

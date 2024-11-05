@@ -3,6 +3,7 @@
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "symulacja.h"
+#include "zapisz_wczytaj.h"
 
 void menu(struct Miasteczko *miasteczko) {
     for (;;) {
@@ -13,7 +14,9 @@ void menu(struct Miasteczko *miasteczko) {
         printf("2. Zobacz podstawowe informacje o miasteczku\n");
         printf("3. Zobacz listę mieszkańców\n");
         printf("4. Zobacz cmentarz\n");
-        printf("5. Wyjdż\n");
+        printf("5. Zapisz\n");
+        printf("6. Wczytaj\n");
+        printf("7. Wyjdż\n");
 
         int opcja;
         int input = scanf_s("%i", &opcja);
@@ -37,6 +40,9 @@ void menu(struct Miasteczko *miasteczko) {
                 lista_osób_na_cmenatrzu(miasteczko->cmentarz);
                 break;
             case 5:
+                zapisz_do_pliku(miasteczko);
+                break;
+            case 7:
                 return;
         }
     }
