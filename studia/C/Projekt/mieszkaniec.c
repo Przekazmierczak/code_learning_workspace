@@ -5,6 +5,8 @@
 #include <string.h>
 #include "mieszkaniec.h"
 
+#define MAX_IMIĘ_NAZWISKO 20
+
 char*** wczytaj_listę_imion_z_pliku() {
     char ***lista_możliwych_imion = malloc(4 * sizeof(char**));
     for (int i = 0; i < 4; i++) {
@@ -61,7 +63,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych
     // Przydziel imię i nazwisko w zależności od płci
     if (mieszkaniec->płeć == 'm') {
         char* imię = lista_możliwych_imion[0][rand() % 40];
-        mieszkaniec->imię = malloc(strlen(imię)+ 1);
+        mieszkaniec->imię = malloc(sizeof(char) * MAX_IMIĘ_NAZWISKO);
         if (mieszkaniec->imię == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
             exit(EXIT_FAILURE);
@@ -69,7 +71,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych
         strcpy(mieszkaniec->imię, imię);
     
         char* nazwisko = lista_możliwych_imion[2][rand() % 40];
-        mieszkaniec->nazwisko = malloc(strlen(nazwisko)+ 1);
+        mieszkaniec->nazwisko = malloc(sizeof(char) * MAX_IMIĘ_NAZWISKO);
         if (mieszkaniec->nazwisko == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");
             exit(EXIT_FAILURE);
@@ -77,7 +79,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych
         strcpy(mieszkaniec->nazwisko, nazwisko);
     } else {
         char* imię = lista_możliwych_imion[1][rand() % 40];
-        mieszkaniec->imię = malloc(strlen(imię)+ 1);
+        mieszkaniec->imię = malloc(sizeof(char) * MAX_IMIĘ_NAZWISKO);
         if (mieszkaniec->imię == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->imię w stwórz_mieszkańca.\n");
             exit(EXIT_FAILURE);
@@ -85,7 +87,7 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych
         strcpy(mieszkaniec->imię, imię);
 
         char* nazwisko = lista_możliwych_imion[3][rand() % 40];
-        mieszkaniec->nazwisko = malloc(strlen(nazwisko)+ 1);
+        mieszkaniec->nazwisko = malloc(sizeof(char) * MAX_IMIĘ_NAZWISKO);
         if (mieszkaniec->nazwisko == NULL) {
             printf("Błąd: Nie udało się przydzielić pamięci dla mieszkaniec->nazwisko w stwórz_mieszkańca.\n");
             exit(EXIT_FAILURE);

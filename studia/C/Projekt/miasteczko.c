@@ -15,7 +15,7 @@ struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
     }
     miasteczko->mieszkańcy = NULL;
     miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
-    miasteczko->rok = 2024; // Rok początkowy
+    miasteczko->rok = 0; // Rok początkowy
     miasteczko->budżet = budżet; // Budżet początkowy
 
     int ilość_pozycji = 10;

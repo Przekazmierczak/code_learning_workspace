@@ -42,6 +42,9 @@ void menu(struct Miasteczko *miasteczko) {
             case 5:
                 zapisz_do_pliku(miasteczko);
                 break;
+            case 6:
+                wczytaj_z_pliku(miasteczko);
+                break;
             case 7:
                 return;
         }
