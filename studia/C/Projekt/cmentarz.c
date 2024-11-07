@@ -117,3 +117,18 @@ void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz) {
     printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
     _getch();
 }
+
+void uwolnij_cmentarz(struct Cmentarz * cmentarz) {
+    for (int i = 0; i < cmentarz->ilość_rzędów; i++) {
+        for (int j = 0; j < cmentarz->ilość_pozycji; j++) {
+            if (cmentarz->aleja[i][j] != NULL) {
+                free(cmentarz->aleja[i][j]->zmarły->imię);
+                free(cmentarz->aleja[i][j]->zmarły->nazwisko);
+                free(cmentarz->aleja[i][j]->zmarły);
+                free(cmentarz->aleja[i][j]);
+            }
+        }
+        free(cmentarz->aleja[i]);
+    }
+    free(cmentarz->aleja);
+}

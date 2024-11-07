@@ -5,6 +5,7 @@
 
 #include "mieszkaniec.h"
 #include "miasteczko.h"
+#include "cmentarz.h"
 
 #define MAX_IMIĘ_NAZWISKO 20
 
@@ -69,6 +70,9 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
 }
 
 void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
+    uwolnij_cmentarz(miasteczko->cmentarz);
+    uwolnij_mieszkańców(miasteczko);
+
     FILE *file = fopen("zapis.bin", "rb");
 
     if (!file){
@@ -123,8 +127,6 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
 
     fread(&miasteczko->cmentarz->ilość_pozycji,sizeof(int), 1, file);
     fread(&miasteczko->cmentarz->ilość_rzędów, sizeof(int), 1, file);
-
-    miasteczko->cmentarz->aleja = NULL;
 
     miasteczko->cmentarz->aleja = malloc(miasteczko->cmentarz->ilość_rzędów * sizeof(struct Grób**));
 
