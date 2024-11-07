@@ -21,31 +21,37 @@ int main() {
     system("cls");  // Wyczyść ekran (dla systemu Windows)
     printf("Witaj w symulacji miasta!\n");
 
+    // Poberz liczbę mieszkańców od użytkownika
     printf("Podaj początkową liczbę mieszkańców: ");
     int input_mieszkańcy = 0;
     while (input_mieszkańcy != 1) {
-        input_mieszkańcy = scanf_s("%i", &liczba_mieszkańców);
+        input_mieszkańcy = scanf_s("%i", &liczba_mieszkańców);  // Odczytaj liczbę mieszkańców
         if (input_mieszkańcy != 1) {
             printf("Podaj początkową liczbę mieszkańców (w formacie liczbowym): ");
             int c;
+            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
             while ((c = getchar()) != '\n' && c != EOF);
         }
     }
 
+    // Pobierz początkowy budżet
     printf("Podaj budżet początkowy: ");
     int input_budżet = 0;
     while (input_budżet != 1) {
-        input_budżet = scanf_s("%i", &budżet);
+        input_budżet = scanf_s("%i", &budżet);  // Odczytaj budżet
         if (input_budżet != 1) {
             printf("Podaj budżet początkowy (w formacie liczbowym): ");
             int c;
+            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
             while ((c = getchar()) != '\n' && c != EOF);
         }
     }
     
+    // Stwórz strukturę Miasteczko z danymi użytkownika
     struct Miasteczko *miasteczko = stwórz_miasteczko(liczba_mieszkańców, budżet);
 
+    // Wywołaj funkcję menu, aby pozwolić użytkownikowi na interakcję z symulacją
     menu(miasteczko);
 
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS;  // Zakończ program
 }

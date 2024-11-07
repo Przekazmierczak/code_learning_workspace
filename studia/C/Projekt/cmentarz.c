@@ -6,6 +6,10 @@
 
 struct Cmentarz* stwórz_cmentarz(int ilość_pozycji) {
     struct Cmentarz *cmentarz = malloc(sizeof(struct Cmentarz));
+    if (cmentarz == NULL) {
+        printf("Błąd: Nie udało się przydzielić pamięci dla cmentarz w stwórz_cmentarz.\n");
+        exit(EXIT_FAILURE);
+    }
     cmentarz->ilość_pozycji = ilość_pozycji;
     cmentarz->ilość_rzędów = 1;
 

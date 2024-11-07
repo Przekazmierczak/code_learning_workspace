@@ -16,14 +16,15 @@ void menu(struct Miasteczko *miasteczko) {
         printf("4. Zobacz cmentarz\n");
         printf("5. Zapisz\n");
         printf("6. Wczytaj\n");
-        printf("7. Wyjdż\n");
+        printf("7. Zakończ program\n");
 
-        int opcja;
-        int input = scanf_s("%i", &opcja);
+        int opcja;  // Zmienna do przechowania wybranej opcji
+        int input = scanf_s("%i", &opcja);  // Odczytaj wejście użytkownika (opcję)
 
+        // Jeśli podana wartość nie jest poprawna, czyści bufor wejściowy
         if (input != 1) {
             int c;
-            while ((c = getchar()) != '\n' && c != EOF);
+            while ((c = getchar()) != '\n' && c != EOF);  // Oczyść bufor wejścia
         }
 
         switch (opcja) {

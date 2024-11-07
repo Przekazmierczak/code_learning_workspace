@@ -13,7 +13,7 @@ struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
         printf("Błąd: Nie udało się przydzielić pamięci dla miasteczka w stwórz_miasteczko.\n");
         exit(EXIT_FAILURE);
     }
-    miasteczko->mieszkańcy = NULL;
+    miasteczko->mieszkańcy = NULL;  // Inicjalizacja listy mieszkańców
     miasteczko->ilość_mieszkańców = 0; // Początkowa liczba mieszkańców
     miasteczko->rok = 0; // Rok początkowy
     miasteczko->budżet = budżet; // Budżet początkowy
@@ -21,9 +21,9 @@ struct Miasteczko* stwórz_miasteczko(int liczba_mieszkańców, int budżet) {
     int ilość_pozycji = 10;
     miasteczko->cmentarz = stwórz_cmentarz(ilość_pozycji);
 
-    miasteczko->szpitale = 1; // Ilość szpitali
-    miasteczko->straż_pożarna = 1; // Ilość budynków straży pożarnej
-    miasteczko->szkoły = 1; // Ilość budynków szkolnych
+    miasteczko->szpitale = 1;  // Początkowa liczba szpitali
+    miasteczko->straż_pożarna = 1;  // Początkowa liczba straży pożarnej
+    miasteczko->szkoły = 1;  // Początkowa liczba szkół
 
     miasteczko->lista_możliwych_imion = wczytaj_listę_imion_z_pliku();
 
@@ -42,7 +42,7 @@ void dodaj_mieszkańca(struct Miasteczko *miasteczko, bool noworodek) {
         printf("Błąd: Nie udało się przydzielić pamięci dla węzła w dodaj_mieszkańca.\n");
         exit(EXIT_FAILURE);
     }
-    aktualny_mieszkaniec->val = mieszkaniec;
+    aktualny_mieszkaniec->val = mieszkaniec;  // Przypisz nowego mieszkańca
     aktualny_mieszkaniec->next = miasteczko->mieszkańcy; // Dodaj nowego mieszkańca na początek listy
     miasteczko->mieszkańcy = aktualny_mieszkaniec;
     miasteczko->ilość_mieszkańców += 1; // Zwiększ liczbę mieszkańców
@@ -81,7 +81,7 @@ void informacje_o_miasteczku(struct Miasteczko *miasteczko) {
     printf("Ilość budynków straży pożarnej: %i\n", miasteczko->straż_pożarna);
     printf("Ilość budynków szkolnych: %i\n", miasteczko->szkoły);
     printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();
+    _getch();  // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }
 
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
@@ -102,7 +102,7 @@ void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
         count++;
     }
     printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();
+    _getch();  // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }
 
 void uwolnij_mieszkańców(struct Miasteczko *miasteczko) {

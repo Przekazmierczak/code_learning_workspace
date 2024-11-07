@@ -5,43 +5,48 @@
 #include <string.h>
 #include "mieszkaniec.h"
 
-#define MAX_IMIĘ_NAZWISKO 20
+const int ILOŚĆ_KATEGORII = 4;
+const int ILOŚĆ_IMION_NAZWISK = 40;
+const int MAX_IMIĘ_NAZWISKO = 20;
 
 char*** wczytaj_listę_imion_z_pliku() {
-    char ***lista_możliwych_imion = malloc(4 * sizeof(char**));
+    // Stwórz tabelę do przechowania możliwych imion oraz nazwisk
+    char ***lista_możliwych_imion = malloc(ILOŚĆ_KATEGORII * sizeof(char**));
     for (int i = 0; i < 4; i++) {
-        lista_możliwych_imion[i] = malloc(40 * sizeof(char*));
+        lista_możliwych_imion[i] = malloc(ILOŚĆ_IMION_NAZWISK * sizeof(char*));
         for (int j = 0; j < 40; j++) {
-            lista_możliwych_imion[i][j] = malloc(20 * sizeof(char));
+            lista_możliwych_imion[i][j] = malloc(MAX_IMIĘ_NAZWISKO * sizeof(char));
         }
     }
     
-    char buffer[10000];
+    char buffer[10000]; // Bufor do odczytu linii z pliku
     int linia = 0;
 
     FILE *file = fopen("imiona.txt", "r");
 
     if (file == NULL) {
-        printf("Nie udało otworzyć się pliku imiona.txt\n");
+        printf("Błąd: Nie udało otworzyć się pliku imiona.txt\n");
         exit(EXIT_FAILURE);
     } else {
+        // Odczytaj plik linia po linii
         while (!feof(file) && !ferror(file)) {
             if (fgets(buffer, 10000, file) != NULL) {
                 int litera_linia = 0;
                 int litera_imię = 0;
                 int imię = 0;
+                // Przejdź po wszystkich literach w danej linii
                 while (buffer[litera_linia] != '\0') {
                     if (buffer[litera_linia] != ' ' && buffer[litera_linia] != '\n') {
                         lista_możliwych_imion[linia][imię][litera_imię] = buffer[litera_linia];
                         litera_imię++;
                     } else {
-                        lista_możliwych_imion[linia][imię][litera_imię] = '\0';
-                        imię ++;
+                        lista_możliwych_imion[linia][imię][litera_imię] = '\0';  // Zakończy imię/nazwisko
+                        imię ++;  // Przejdź do kolejnego imienia/nazwiska
                         litera_imię = 0;
                     }
                     litera_linia++;
                 }
-                linia++;
+                linia++;  // Przejdź do następnej linii
             }
         }
     }

@@ -87,11 +87,11 @@ void symulacja(struct Miasteczko *miasteczko) {
             );
         printf("NACIŚNIJ PRZYCISK ABY ZATRZYMAĆ SYMULACJĘ");
         if (_kbhit()) {  // Nasłuchuj wciśnięcia przycisku
-            _getch();   // Wszytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
+            _getch();   // Wczytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
             system("cls");
             return;
         }
-        Sleep(1000);
+        Sleep(500);
     }
 }
     
