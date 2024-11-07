@@ -61,7 +61,7 @@ void śmierć_mieszkańców(struct Miasteczko *miasteczko, struct Cmentarz *cmen
     }
 }
 
-int szansa_na_śmierć_naturalną(int wiek) {
+static int szansa_na_śmierć_naturalną(int wiek) {
     int przedział = wiek / 20; // Podziel wiek na przedziały co 20 lat
     switch (przedział) {
         case 0:  // Wiek 0-19
@@ -82,16 +82,16 @@ int szansa_na_śmierć_naturalną(int wiek) {
 }
 
 // Określ dodatkowe ryzyko śmierci w wyniku pożaru - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
-int szansa_na_śmierć_w_przypadku_pożaru(struct Miasteczko *miasteczko) {
+static int szansa_na_śmierć_w_przypadku_pożaru(struct Miasteczko *miasteczko) {
     return 150 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }
 
 // Określ dodatkowe ryzyko śmierci w wyniku powodzi - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
-int szansa_na_śmierć_w_przypadku_powodzi(struct Miasteczko *miasteczko) {
+static int szansa_na_śmierć_w_przypadku_powodzi(struct Miasteczko *miasteczko) {
     return 100 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }
 
 // Określ dodatkowe ryzyko śmierci w wyniku trzęsienia ziemi - wartość zależy od stosunku ilości mieszkańców do straży pożarnej
-int szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(struct Miasteczko *miasteczko) {
+static int szansa_na_śmierć_w_przypadku_trzęsienia_ziemi(struct Miasteczko *miasteczko) {
     return 50 * straż_pożarna(miasteczko->ilość_mieszkańców / miasteczko->straż_pożarna);
 }

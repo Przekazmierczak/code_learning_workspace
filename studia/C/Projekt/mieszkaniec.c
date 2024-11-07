@@ -58,10 +58,10 @@ struct Mieszkaniec* stwórz_mieszkańca(bool noworodek, char*** lista_możliwych
     }
 
     // Losuj płeć mieszkańca
-    mieszkaniec->płeć = rand() % 2 ? 'm' : 'k';
+    mieszkaniec->płeć = rand() % 2 ? Mężczyzna : Kobieta;
 
     // Przydziel imię i nazwisko w zależności od płci
-    if (mieszkaniec->płeć == 'm') {
+    if (mieszkaniec->płeć == Mężczyzna) {
         char* imię = lista_możliwych_imion[0][rand() % 40];
         mieszkaniec->imię = malloc(sizeof(char) * MAX_IMIĘ_NAZWISKO);
         if (mieszkaniec->imię == NULL) {

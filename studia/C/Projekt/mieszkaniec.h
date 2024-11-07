@@ -3,10 +3,15 @@
 #ifndef MIESZKANIEC_H
 #define MIESZKANIEC_H
 
+enum Płeć {
+    Mężczyzna,
+    Kobieta
+};
+
 struct Mieszkaniec {
     char* imię;
     char* nazwisko;
-    char płeć; // m - mężczyzna, k - kobieta
+    enum Płeć płeć;
     int wiek;
     int pensja;
 };

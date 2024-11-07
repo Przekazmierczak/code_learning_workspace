@@ -51,8 +51,6 @@ void symulacja(struct Miasteczko *miasteczko) {
         printf("Ilość szpitali: %i\n", miasteczko->szpitale);
         printf("Ilość budynków straży pożarnej: %i\n", miasteczko->straż_pożarna);
         printf("Ilość budynków szkolnych: %i\n", miasteczko->szkoły);
-        // printf("Stosunek %i", miasteczko->ilość_mieszkańców / miasteczko->szpitale);
-        // printf("Następny budynek %i", następny_budynek_w_planie);
 
         // Wyświetl informację o katastrofach
         printf("----------------------------Katastrofy---------------------------------\n");
@@ -93,7 +91,7 @@ void symulacja(struct Miasteczko *miasteczko) {
             system("cls");
             return;
         }
-        Sleep(100);
+        Sleep(1000);
     }
 }
     

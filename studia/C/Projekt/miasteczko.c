@@ -90,11 +90,11 @@ void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
     int count = 1;
     while (aktualny_mieszkaniec != NULL) {
         // Wydrukuj dane aktualnego mieszkańca
-        printf("%i: %s %s Płeć: %c Wiek: %i Pensja: %i\n",
+        printf("%i: %s %s Płeć: %s Wiek: %i Pensja: %i\n",
             count,
             aktualny_mieszkaniec->val->imię,
             aktualny_mieszkaniec->val->nazwisko,
-            aktualny_mieszkaniec->val->płeć,
+            aktualny_mieszkaniec->val->płeć == Mężczyzna ? "Mężczyna" : "Kobieta",
             aktualny_mieszkaniec->val->wiek,
             aktualny_mieszkaniec->val->pensja
             );
