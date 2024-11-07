@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -10,6 +10,9 @@
 #define MAX_IMIĘ_NAZWISKO 20
 
 void zapisz_do_pliku(struct Miasteczko *miasteczko) {
+    system("cls");
+    printf("TRWA ZAPISYWANIE...");
+
     FILE *file = fopen("zapis.bin", "wb");
 
     if (!file){
@@ -67,9 +70,16 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
 
     fclose(file);
 
+    system("cls");
+    printf("Zapisywanie zakończono sukcesem\n");
+    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
+    _getch();
 }
 
 void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
+    system("cls");
+    printf("TRWA WCZYTYWANIE...");
+
     uwolnij_cmentarz(miasteczko->cmentarz);
     uwolnij_mieszkańców(miasteczko);
 
@@ -202,4 +212,8 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
 
     fclose(file);
 
+    system("cls");
+    printf("Wczytywanie zakończono sukcesem\n");
+    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
+    _getch();
 }
