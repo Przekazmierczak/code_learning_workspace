@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
-#include <windows.h>
-#include <conio.h>
+// #include <windows.h>
+// #include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -18,14 +18,21 @@ int main() {
 
     int liczba_mieszkańców;
     int budżet;
-    system("cls");  // Wyczyść ekran (dla systemu Windows)
+    
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
     printf("Witaj w symulacji miasta!\n");
 
     // Poberz liczbę mieszkańców od użytkownika
     printf("Podaj początkową liczbę mieszkańców: ");
     int input_mieszkańcy = 0;
     while (input_mieszkańcy != 1) {
-        input_mieszkańcy = scanf_s("%i", &liczba_mieszkańców);  // Odczytaj liczbę mieszkańców
+        input_mieszkańcy = scanf("%i", &liczba_mieszkańców);  // Odczytaj liczbę mieszkańców
         if (input_mieszkańcy != 1) {
             printf("Podaj początkową liczbę mieszkańców (w formacie liczbowym): ");
             int c;
@@ -38,7 +45,7 @@ int main() {
     printf("Podaj budżet początkowy: ");
     int input_budżet = 0;
     while (input_budżet != 1) {
-        input_budżet = scanf_s("%i", &budżet);  // Odczytaj budżet
+        input_budżet = scanf("%i", &budżet);  // Odczytaj budżet
         if (input_budżet != 1) {
             printf("Podaj budżet początkowy (w formacie liczbowym): ");
             int c;

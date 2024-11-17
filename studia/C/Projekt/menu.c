@@ -7,7 +7,12 @@
 
 void menu(struct Miasteczko *miasteczko) {
     for (;;) {
-        system("cls");
+        // Wyczyść ekran
+        #ifdef _WIN32
+            system("cls");  // Windows
+        #else
+            system("clear");  // Linux/macOS
+        #endif
         printf("MENU\n");
         printf("Wybierz opcję:\n");
         printf("1. Kontynuj symulacje\n");
@@ -19,7 +24,7 @@ void menu(struct Miasteczko *miasteczko) {
         printf("7. Zakończ program\n");
 
         int opcja;  // Zmienna do przechowania wybranej opcji
-        int input = scanf_s("%i", &opcja);  // Odczytaj wejście użytkownika (opcję)
+        int input = scanf("%i", &opcja);  // Odczytaj wejście użytkownika (opcję)
 
         // Jeśli podana wartość nie jest poprawna, czyści bufor wejściowy
         if (input != 1) {

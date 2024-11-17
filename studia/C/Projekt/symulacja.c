@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
-#include <windows.h>
-#include <conio.h>
+// #include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -12,11 +11,22 @@
 #include "symulacja.h"
 #include "menu.h"
 
+#ifdef _WIN32
+#include <windows.h>  // For Sleep() on Windows
+#else
+#include <unistd.h>   // For sleep() and usleep() on Linux/macOS
+#endif
+
 void symulacja(struct Miasteczko *miasteczko) {
     int następny_budynek_w_planie = rand() % 3;  // Losowy wybór budynku, który będzie budowany
     // Główna pętla symulacji
     for (;;) {
-        system("cls");  // Wyczyść ekran (dla systemu Windows)
+        // Wyczyść ekran
+        #ifdef _WIN32
+            system("cls");  // Windows
+        #else
+            system("clear");  // Linux/macOS
+        #endif
         
         printf("----------------------------Rok:%i-----------------------------------\n",miasteczko->rok);
         printf("Budżet: %lli\n", miasteczko->budżet);
@@ -91,7 +101,11 @@ void symulacja(struct Miasteczko *miasteczko) {
             system("cls");
             return;
         }
-        Sleep(500);
+        #ifdef _WIN32
+            Sleep(500);
+        #else
+            sleep(5);
+        #endif
     }
 }
     

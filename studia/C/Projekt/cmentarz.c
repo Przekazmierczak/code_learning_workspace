@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+// #include <conio.h>
 #include "mieszkaniec.h"
 #include "cmentarz.h"
 
@@ -104,7 +104,13 @@ static int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmie
 }
 
 void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz) {
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+    
     for (int i = 0; i < cmentarz->ilość_rzędów; i++) {
         for (int j = 0; j < cmentarz->ilość_pozycji; j++) {
             printf("W rzędzie nr %i w miejscu nr %i spoczywa: ", i, j);

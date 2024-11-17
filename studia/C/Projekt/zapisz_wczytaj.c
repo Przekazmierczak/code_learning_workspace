@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+// #include <conio.h>
 #include <stdbool.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
@@ -14,7 +14,13 @@ extern int MAX_IMIĘ_NAZWISKO;
 
 // Funkcja zapisująca dane miasteczka do pliku binarnego
 void zapisz_do_pliku(struct Miasteczko *miasteczko) {
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
     printf("TRWA ZAPISYWANIE...");
 
     // Otwórz plik binarny do zapisu
@@ -81,9 +87,15 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
         }
     }
 
-    fclose(file);  // Zamykanij plik
+    fclose(file);  // Zamknij plik
 
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
     printf("Zapisywanie zakończono sukcesem\n");
     printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
     _getch();
@@ -91,7 +103,13 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
 
 // Funkcja wczytująca dane miasteczka z pliku binarnego
 void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
     printf("TRWA WCZYTYWANIE...");
 
     // Zwolnij wcześniej zarezerwowaną pamięć
@@ -248,7 +266,13 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
 
     fclose(file);
 
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+    
     printf("Wczytywanie zakończono sukcesem\n");
     printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
     _getch();

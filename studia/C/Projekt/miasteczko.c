@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+// #include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -72,7 +72,12 @@ void zarządzaj_mieszkańcami(struct Miasteczko *miasteczko) {
 }
 
 void informacje_o_miasteczku(struct Miasteczko *miasteczko) {
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
     printf("Rok: %i\n", miasteczko->rok);
     printf("Budżet: %lli\n", miasteczko->budżet);
     printf("Ilość mieszkańców: %i\n", miasteczko->ilość_mieszkańców);
@@ -85,7 +90,13 @@ void informacje_o_miasteczku(struct Miasteczko *miasteczko) {
 }
 
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
-    system("cls");
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
     struct Mieszkańcy *aktualny_mieszkaniec = miasteczko->mieszkańcy;
     int count = 1;
     while (aktualny_mieszkaniec != NULL) {
