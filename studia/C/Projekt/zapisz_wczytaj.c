@@ -20,7 +20,7 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
         system("clear");  // Linux/macOS
     #endif
 
-    printf("TRWA ZAPISYWANIE...");
+    printf("TRWA ZAPISYWANIE...\n");
 
     // Otwórz plik binarny do zapisu
     FILE *file = fopen("zapis.bin", "wb");
@@ -109,7 +109,7 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
         system("clear");  // Linux/macOS
     #endif
 
-    printf("TRWA WCZYTYWANIE...");
+    printf("TRWA WCZYTYWANIE...\n");
 
     // Zwolnij wcześniej zarezerwowaną pamięć
     uwolnij_cmentarz(miasteczko->cmentarz);

@@ -17,6 +17,6 @@ struct Grób {
 struct Cmentarz* stwórz_cmentarz(int ilość_pozycji);
 void powiększ_cmentarz(struct Cmentarz *cmentarz);
 void dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec, int rok_śmierci, int *rząd, int *pozycja);
-int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci);
+static int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci);
 void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz);
 void uwolnij_cmentarz(struct Cmentarz * cmentarz);
