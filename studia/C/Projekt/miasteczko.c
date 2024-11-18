@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -85,8 +84,8 @@ void informacje_o_miasteczku(struct Miasteczko *miasteczko) {
     printf("Ilość szpitali: %i\n", miasteczko->szpitale);
     printf("Ilość budynków straży pożarnej: %i\n", miasteczko->straż_pożarna);
     printf("Ilość budynków szkolnych: %i\n", miasteczko->szkoły);
-    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();  // Czekaj na naciśnięcie klawisza, aby wrócić do menu
+    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }
 
 void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
@@ -112,8 +111,8 @@ void informacje_o_mieszkańcach(struct Miasteczko *miasteczko) {
         aktualny_mieszkaniec = aktualny_mieszkaniec->next; // Przejdź do kolejnego mieszkańca
         count++;
     }
-    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();  // Czekaj na naciśnięcie klawisza, aby wrócić do menu
+    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }
 
 void uwolnij_mieszkańców(struct Miasteczko *miasteczko) {

@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "mieszkaniec.h"
@@ -30,6 +32,8 @@ void menu(struct Miasteczko *miasteczko) {
         if (input != 1) {
             int c;
             while ((c = getchar()) != '\n' && c != EOF);  // Oczyść bufor wejścia
+        } else {
+            getchar();  // Usuń enter z bufforu
         }
 
         switch (opcja) {

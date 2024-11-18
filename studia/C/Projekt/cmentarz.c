@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <conio.h>
 #include "mieszkaniec.h"
 #include "cmentarz.h"
 
@@ -124,8 +123,8 @@ void lista_osób_na_cmenatrzu(struct Cmentarz *cmentarz) {
             }
         }
     }
-    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();
+    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+    while (getchar() != '\n');
 }
 
 void uwolnij_cmentarz(struct Cmentarz * cmentarz) {

@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-// #include <conio.h>
 #include <stdbool.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
@@ -97,8 +96,8 @@ void zapisz_do_pliku(struct Miasteczko *miasteczko) {
     #endif
 
     printf("Zapisywanie zakończono sukcesem\n");
-    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();
+    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }
 
 // Funkcja wczytująca dane miasteczka z pliku binarnego
@@ -274,6 +273,6 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
     #endif
     
     printf("Wczytywanie zakończono sukcesem\n");
-    printf("NACIŚNIJ PRZYCISK ABY POWRÓCIĆ DO MENU");
-    _getch();
+    printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+    while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
 }

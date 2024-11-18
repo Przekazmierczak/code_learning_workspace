@@ -1,8 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
-// #include <conio.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
@@ -11,16 +12,55 @@
 #include "symulacja.h"
 #include "menu.h"
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>  // For Sleep() on Windows
+// #include <conio.h>
 #else
-#include <unistd.h>   // For sleep() and usleep() on Linux/macOS
+#include <unistd.h>   // For sleep() on Linux/macOS
+
 #endif
 
 void symulacja(struct Miasteczko *miasteczko) {
     int następny_budynek_w_planie = rand() % 3;  // Losowy wybór budynku, który będzie budowany
+
+    // Wyczyść ekran
+    #ifdef _WIN32
+        system("cls");  // Windows
+    #else
+        system("clear");  // Linux/macOS
+    #endif
+
+    int ilość_lat;
+    int szybkość_symulacji;
+
+    // Pobierz ilość lat do zasymulowania od użytkownika
+    printf("Podaj ilość lat do zasymulowania: ");
+    int input_ilość_lat = 0;
+    while (input_ilość_lat != 1) {
+        input_ilość_lat = scanf("%i", &ilość_lat);  // Odczytaj ilość lat do zasymulowania
+        if (input_ilość_lat != 1) {
+            printf("Podaj ilość lat do zasymulowania (w formacie liczbowym): ");
+            int c;
+            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+    }
+
+    // Pobierz szybkość symulacji od użytkownika
+    printf("Podaj szybkość symulacji (w ms): ");
+    int input_szybkość_symulacji = 0;
+    while (input_szybkość_symulacji != 1) {
+        input_szybkość_symulacji = scanf("%i", &szybkość_symulacji);  // Odczytaj szybkość symulacji
+        if (input_szybkość_symulacji != 1) {
+            printf("Podaj szybkość symulacji (w formacie liczbowym): ");
+            int c;
+            // Oczyść bufor wejściowy, aby uniknąć zapętlenia
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
+    }
+
     // Główna pętla symulacji
-    for (;;) {
+    for (int i = 0; i < ilość_lat; i++) {
         // Wyczyść ekran
         #ifdef _WIN32
             system("cls");  // Windows
@@ -95,16 +135,18 @@ void symulacja(struct Miasteczko *miasteczko) {
             "  | || |   / /  __/\\__ \\ |  __/ | | | |  __/  / /| |  __/ | | | | | |\n"
             "  |_||_|  /___\\___||___/_|\\___|_| |_|_|\\___| /___|_|\\___|_| |_| |_|_|\n"
             );
-        printf("NACIŚNIJ PRZYCISK ABY ZATRZYMAĆ SYMULACJĘ");
-        if (_kbhit()) {  // Nasłuchuj wciśnięcia przycisku
-            _getch();   // Wczytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
-            system("cls");
-            return;
-        }
+
+        // printf("NACIŚNIJ PRZYCISK ABY ZATRZYMAĆ SYMULACJĘ");
+        // if (kbhit()) {  // Nasłuchuj wciśnięcia przycisku
+        //     getchar();   // Wczytaj wciśnięty klawisz aby nie wyświetlić go w terminalu
+        //     system("cls");
+        //     return;
+        // }
+
         #ifdef _WIN32
-            Sleep(500);
+            Sleep(szybkość_symulacji);
         #else
-            sleep(5);
+            sleep(szybkość_symulacji / 1000);
         #endif
     }
 }
