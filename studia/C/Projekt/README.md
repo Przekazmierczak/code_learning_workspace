@@ -31,6 +31,7 @@ To polecenie skompiluje program i stworzy plik wykonywalny o nazwie symulacja.
     make clean
 
 ## Struktura projektu
+```
 .
 ├── .vscode                # Ustawienia dla Visual Studio Code
 │   └── settings.json      # Plik z ustawieniami edytora
@@ -57,6 +58,7 @@ To polecenie skompiluje program i stworzy plik wykonywalny o nazwie symulacja.
 ├── imiona.txt             # Plik z przykładowymi imonami oraz nazwiskami
 ├── Makefile               # Skrypt budujący projekt
 └── symulacja.exe          # Plik wykonywalny (po kompilacji)
+```
 
 ## Autor
 
