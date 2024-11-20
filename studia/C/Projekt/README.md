@@ -22,13 +22,13 @@ Aby uruchomić projekt, potrzebujesz:
 1. Sklonuj repozytorium lub skopiuj pliki projektu na swój komputer.
 2. W terminalu przejdź do katalogu projektu.
 3. Wykonaj polecenie:
-    make
+    ```make```
 To polecenie skompiluje program i stworzy plik wykonywalny o nazwie symulacja.
 4. Aby uruchomić program, wpisz w terminalu:
-    symulacja.exe (Windows)
-    ./symulacja (Linux/macOS)
+    ```symulacja.exe``` (Windows)
+    ```./symulacja``` (Linux/macOS)
 5. Aby wyczyścić pliki wygenerowane podczas kompilacji, użyj:
-    make clean
+    ```make clean```
 
 ## Struktura projektu
 ```
