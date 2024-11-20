@@ -7,9 +7,9 @@
 // W przypadku wybudowania nowego budynku zmień rodzaj planowanego budynku na kolejny losowy
 int wybuduj_budynek(struct Miasteczko *miasteczko, int następny_budynek_w_planie) {
     while (
-        (następny_budynek_w_planie == 0 && miasteczko->budżet > 8000000) ||  // Budżet na szpital
-        (następny_budynek_w_planie == 1 && miasteczko->budżet > 5000000) ||  // Budżet na straż pożarną
-        (następny_budynek_w_planie == 2 && miasteczko->budżet > 4000000)     // Budżet na szkołę
+        (następny_budynek_w_planie == 0 && miasteczko->budżet > 40000000) ||  // Budżet na szpital
+        (następny_budynek_w_planie == 1 && miasteczko->budżet > 25000000) ||  // Budżet na straż pożarną
+        (następny_budynek_w_planie == 2 && miasteczko->budżet > 20000000)     // Budżet na szkołę
     ) {
         if (następny_budynek_w_planie == 0) {
             miasteczko->szpitale += 1;
