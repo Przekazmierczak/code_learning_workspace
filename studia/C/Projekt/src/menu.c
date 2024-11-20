@@ -17,7 +17,7 @@ void menu(struct Miasteczko *miasteczko) {
         #endif
         printf("MENU\n");
         printf("Wybierz opcję:\n");
-        printf("1. Kontynuj symulacje\n");
+        printf("1. Kontynuuj symulacje\n");
         printf("2. Zobacz podstawowe informacje o miasteczku\n");
         printf("3. Zobacz listę mieszkańców\n");
         printf("4. Zobacz cmentarz\n");
