@@ -88,7 +88,7 @@ void dodaj_zmarłego(struct Cmentarz *cmentarz, struct Mieszkaniec *mieszkaniec,
     return;
 }
 
-static int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci) {
+int określ_rok_likwidacji(struct Mieszkaniec *mieszkaniec, int rok_śmierci) {
     // Oblicz rok likwidacji grobu na podstawie pensji zmarłego
     if (mieszkaniec->pensja > 13000) {
         return rok_śmierci + 100;
