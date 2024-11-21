@@ -111,17 +111,27 @@ void wczytaj_z_pliku(struct Miasteczko *miasteczko) {
 
     printf("TRWA WCZYTYWANIE...\n");
 
-    // Zwolnij wcześniej zarezerwowaną pamięć
-    uwolnij_cmentarz(miasteczko->cmentarz);
-    uwolnij_mieszkańców(miasteczko);
-
     // Otwórz plik binarny do odczytu
     FILE *file = fopen("zapis.bin", "rb");
 
     if (!file){
-        printf("Nie udało się otworzyć pliku do odczytu");
-        exit(EXIT_FAILURE);
+        // Wyczyść ekran
+        #ifdef _WIN32
+            system("cls");  // Windows
+        #else
+            system("clear");  // Linux/macOS
+        #endif
+        
+        printf("Wczytywanie zakończono niepowodzeniem - brak pliku\n");
+        printf("NACIŚNIJ ENTER ABY POWRÓCIĆ DO MENU");
+        while (getchar() != '\n');    // Czekaj na naciśnięcie klawisza, aby wrócić do menu
+        return;
     }
+
+    // Zwolnij wcześniej zarezerwowaną pamięć
+    uwolnij_cmentarz(miasteczko->cmentarz);
+    uwolnij_mieszkańców(miasteczko);
+
 
     // Wczytaj dane podstawowe miasteczka
     fread(&miasteczko->ilość_mieszkańców, sizeof(int), 1, file);
