@@ -1,3 +1,16 @@
+# Wykryj OS i ustaw odpowiednio komendy
+ifeq ($(OS),Windows_NT)
+	OUTPUT_CMD = symulacja.exe
+	CREATE_DIR = @if not exist $(OBJDIR) mkdir $(OBJDIR)
+	CLEAN_CMD = del /q $(OBJDIR)\* $(OUTPUT) *.ilk *.pdb
+	REMOVE_DIR = @if exist $(OBJDIR) rmdir /S /Q $(OBJDIR)
+else
+	OUTPUT_CMD = symulacja
+	CREATE_DIR = mkdir -p $(OBJDIR)
+	CLEAN_CMD = rm -rf $(OBJDIR) $(OUTPUT) *.ilk *.pdb
+	REMOVE_DIR = rm -rf $(OBJDIR)
+endif
+
 # Ustaw compilator pod clang
 CC = clang
 
@@ -11,14 +24,6 @@ OBJDIR = build
 # Flags
 CFLAGS = -g -Wall -I$(INCLUDEDIR)
 
-# Wykryj OS i ustaw odpowiednio komendy
-ifeq ($(OS),Windows_NT)
-	OUTPUT_CMD = symulacja.exe
-	CLEAN_CMD = del /q $(OBJDIR)\* $(OUTPUT) *.ilk *.pdb
-else
-	OUTPUT_CMD = symulacja
-	CLEAN_CMD = rm -rf $(OBJDIR) $(OUTPUT) *.ilk *.pdb
-endif
 
 # Nazwa pliku binarnego
 OUTPUT = $(OUTPUT_CMD)
@@ -39,9 +44,12 @@ $(OUTPUT): $(OBJECTS)
 
 # Stworzenie plików obiektowych .o z plików źródłowych .c
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+# Stwórz folder na pliki źródłowe
+	$(CREATE_DIR)
 # Kompilacja pliku źródłowego ($<) do pliku obiektowego ($@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Usuń stworzone pliki
 clean:
 	$(CLEAN_CMD)
+	$(REMOVE_DIR)
