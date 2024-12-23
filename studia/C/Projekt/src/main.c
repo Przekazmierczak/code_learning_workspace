@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
-// #include <windows.h>
 #include "mieszkaniec.h"
 #include "miasteczko.h"
 #include "cmentarz.h"
