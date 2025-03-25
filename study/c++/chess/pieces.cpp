@@ -137,6 +137,21 @@ class Board {
             enpassant = {NULL, NULL};
             board = create_board ();
         }
+
+        void print_board() {
+            for (int row = 0; row < ROWS; row++) {
+                std::cout << row + 1 << " ";
+                for (int col = 0; col < COLS; col++) {
+                    if (board[row][col]) {
+                        std::cout << "[" << board[row][col]->symbol << "]";
+                    } else {
+                        std::cout << "[ ]";
+                    }
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "   a  b  c  d  e  f  g  h " << std::endl;
+        }
 };
 
 
@@ -161,6 +176,8 @@ int main() {
 
     std::cout << board[0][3]->piece << std::endl;
     std::cout << class_board.turn << std::endl;
+
+    class_board.print_board();
 
     return 0;
 }
