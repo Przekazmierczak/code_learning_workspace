@@ -4,6 +4,7 @@
 #include <array>
 #include <tuple>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 
 class Piece {
@@ -41,8 +42,8 @@ class Piece {
         }
 
         struct Result {
-            std::vector<std::string> moves;
-            std::vector<std::string> attacks;
+            std::vector<std::array<int, 2>> moves;
+            std::vector<std::array<int, 2>> attacks;
             bool promotion = false;
         };
 
@@ -50,47 +51,69 @@ class Piece {
             return row >= 0 && row < ROWS && column >= 0 && column < COLS;
         }
 
-        // Result check_piece_possible_moves (std::vector<std::tuple<std::string, std::string, std::array<int, 2>>> board, std::string turn) {
-        //     Result result;
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        bool is_not_pinned() {
+            return true;
+        }
 
-        //     bool opponent = true;
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        std::unordered_set<std::array<int, 2>> flatting_checkin_pieces() {
+            std::unordered_set<std::array<int, 2>> checking_positions;
+            return checking_positions;
+        }
 
-        //     if (piece == "Pawn") {
-        //         int direction_by_colour = player == "white" ? 1: -1;
+        Result check_piece_possible_moves (
+            Board& board_class,
+            std::unordered_set<std::array<int, 2>>& attacked_positions,
+            std::unordered_map<std::array<int, 2>, std::vector<std::array<int, 2>>>& checkin_pieces,
+            std::unordered_map<std::array<int, 2>, std::vector<std::array<int, 2>>>& pinned_pieces
+        ) {
+            Result result;
 
-        //         std::vector<std::array<int, 2>> directions = {{direction_by_colour, 0}};
+            bool opponent = (player == board_class.turn) ? false : true;
 
-        //         if ((player == "white" && row == 1) || (player == "black" && row == 6)) {
-        //             directions.push_back({direction_by_colour * 2, 0});
-        //         }
+            if (piece == "Pawn") {
+                int direction_by_colour = player == "white" ? 1: -1;
 
-        //         if ((player == "white" && row == 6) || (player == "black" && row == 1)){
-        //             result.promotion = true;
-        //         }
+                std::vector<std::array<int, 2>> directions = {{direction_by_colour, 0}};
 
-        //         if (opponent) {
-        //             directions = {{direction_by_colour, 1}, {direction_by_colour, -1}};
-        //             for (auto direction: directions) {
-        //                 int new_row = row + direction[0];
-        //                 int new_column = row + direction[1];
+                if ((player == "white" && row == 1) || (player == "black" && row == 6)) {
+                    directions.push_back({direction_by_colour * 2, 0});
+                }
 
-        //             }
-        //         }
+                if ((player == "white" && row == 6) || (player == "black" && row == 1)){
+                    result.promotion = true;
+                }
 
+                if (opponent) {
+                    directions = {{direction_by_colour, 1}, {direction_by_colour, -1}};
+                    for (auto direction: directions) {
+                        int new_row = row + direction[0];
+                        int new_column = row + direction[1];
 
+                        if (is_valid_position(new_row, new_column) && board_class.board[new_row][new_column] && board_class.board[new_row][new_column]->player != player) {
+                            result.moves.push_back({new_row, new_column});
+                            if (board_class.board[new_row][new_column]->piece == "king") {
+                                checkin_pieces[{row, column}];
+                            }
+                        }
+                        
+                        if (is_valid_position(new_row, new_column)) {
+                            attacked_positions.insert({new_row, new_column});
+                        }
+                    }
+                }
 
+                for (auto direction : directions) {
+                    std::cout << direction[0] << "\n";
+                    std::cout << direction[1] << "\n";
+                }
 
+                std::cout <<"promotion:" << result.promotion << "\n";
+            }
 
-        //         for (auto direction : directions) {
-        //             std::cout << direction[0] << "\n";
-        //             std::cout << direction[1] << "\n";
-        //         }
-
-        //         std::cout <<"promotion:" << result.promotion << "\n";
-        //     }
-
-        //     return result;
-        // }
+            return result;
+        }
 };
 
 class Board {
@@ -101,7 +124,9 @@ class Board {
         std::string turn;
         std::string castling;
         std::array<int, 2> enpassant;
+
         std::array<std::array<std::unique_ptr<Piece>, 8>, 8> board;
+
 
         std::array<std::array<std::unique_ptr<Piece>, 8>, 8> create_board () {
             std::array<std::array<char, 8>, 8> simplify_board = {{
