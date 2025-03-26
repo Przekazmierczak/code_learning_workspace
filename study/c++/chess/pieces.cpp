@@ -72,6 +72,9 @@ class Piece {
 
             bool opponent = (player == board_class.turn) ? false : true;
 
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            auto checking_positions = flatting_checkin_pieces();
+
             if (piece == "Pawn") {
                 int direction_by_colour = player == "white" ? 1: -1;
 
@@ -87,7 +90,7 @@ class Piece {
 
                 if (opponent) {
                     directions = {{direction_by_colour, 1}, {direction_by_colour, -1}};
-                    for (auto direction: directions) {
+                    for (auto direction : directions) {
                         int new_row = row + direction[0];
                         int new_column = row + direction[1];
 
@@ -100,6 +103,46 @@ class Piece {
                         
                         if (is_valid_position(new_row, new_column)) {
                             attacked_positions.insert({new_row, new_column});
+                        }
+                    }
+                }
+
+                else {
+                    bool can_move_second_time = true;
+                    for (auto direction : directions) {
+                        int new_row = row + direction[0];
+                        int new_column = row + direction[1];
+
+                        if (is_valid_position(new_row, new_column) && !board_class.board[new_row][new_column] && can_move_second_time) {
+                            if (is_not_pinned()) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.moves.push_back({new_row, new_column});
+                                }
+                            }
+                        } else {
+                            can_move_second_time = false;
+                        }
+                    }
+
+                    directions = {{direction_by_colour, 1}, {direction_by_colour, -1}};
+                    for (auto direction : directions) {
+                        int new_row = row + direction[0];
+                        int new_column = row + direction[1];
+
+                        if (is_valid_position(new_row, new_column) && board_class.board[new_row][new_column] && board_class.board[new_row][new_column]->player != player) {
+                            if (is_not_pinned()) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.attacks.push_back({new_row, new_column});
+                                }
+                            }
+                        }
+
+                        if (is_valid_position(new_row, new_column) && std::array<int, 2>{new_row, new_column} == board_class.enpassant) {
+                            if (is_not_pinned()) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.attacks.push_back({new_row, new_column});
+                                }
+                            }
                         }
                     }
                 }
