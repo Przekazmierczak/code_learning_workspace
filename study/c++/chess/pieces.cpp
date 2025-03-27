@@ -51,29 +51,40 @@ class Piece {
             return row >= 0 && row < ROWS && column >= 0 && column < COLS;
         }
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        bool is_not_pinned() {
-            return true;
+        bool is_not_pinned(
+            std::array<int, 2> piece_position,
+            std::array<int, 2> move,
+            Board& board_class,
+            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>>& pinned_pieces
+        ) {
+            return (player != board_class.turn || !pinned_pieces.count(piece_position) || (pinned_pieces.count(piece_position) && pinned_pieces[piece_position].count(move)));
         }
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        std::unordered_set<std::array<int, 2>> flatting_checkin_pieces() {
+        std::unordered_set<std::array<int, 2>> flatting_checkin_pieces(std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>>& checkin_pieces) {
             std::unordered_set<std::array<int, 2>> checking_positions;
+
+            if (checking_positions.size() == 1) {
+                for (auto key : checkin_pieces) {
+                    checking_positions.insert(key.first);
+                    for (auto value : key.second) {
+                        checking_positions.insert(value);
+                    }
+                }
+            }
             return checking_positions;
         }
 
         Result check_piece_possible_moves (
             Board& board_class,
             std::unordered_set<std::array<int, 2>>& attacked_positions,
-            std::unordered_map<std::array<int, 2>, std::vector<std::array<int, 2>>>& checkin_pieces,
-            std::unordered_map<std::array<int, 2>, std::vector<std::array<int, 2>>>& pinned_pieces
+            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>>& checkin_pieces,
+            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>>& pinned_pieces
         ) {
             Result result;
 
             bool opponent = (player == board_class.turn) ? false : true;
 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            auto checking_positions = flatting_checkin_pieces();
+            auto checking_positions = flatting_checkin_pieces(checkin_pieces);
 
             if (piece == "Pawn") {
                 int direction_by_colour = player == "white" ? 1: -1;
@@ -114,7 +125,7 @@ class Piece {
                         int new_column = row + direction[1];
 
                         if (is_valid_position(new_row, new_column) && !board_class.board[new_row][new_column] && can_move_second_time) {
-                            if (is_not_pinned()) {
+                            if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
                                 if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
                                     result.moves.push_back({new_row, new_column});
                                 }
@@ -130,7 +141,7 @@ class Piece {
                         int new_column = row + direction[1];
 
                         if (is_valid_position(new_row, new_column) && board_class.board[new_row][new_column] && board_class.board[new_row][new_column]->player != player) {
-                            if (is_not_pinned()) {
+                            if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
                                 if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
                                     result.attacks.push_back({new_row, new_column});
                                 }
@@ -138,7 +149,7 @@ class Piece {
                         }
 
                         if (is_valid_position(new_row, new_column) && std::array<int, 2>{new_row, new_column} == board_class.enpassant) {
-                            if (is_not_pinned()) {
+                            if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
                                 if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
                                     result.attacks.push_back({new_row, new_column});
                                 }
