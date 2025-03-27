@@ -206,9 +206,40 @@ class Board {
 
             return board;
         }
-        // std::array<std::array<Piece, 8>, 8> create_board (std::array<std::array<char, 8>, 8>simplify_board) {
 
-        // }
+        void add_moves() {
+            std::array<std::array<Piece::Result, 8>, 8> possible_moves;
+            std::unordered_set<std::array<int, 2>> attacked_positions;
+            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>> checkin_pieces;
+            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>>> pinned_pieces;
+            bool end = true;
+            std::string winner;
+
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    if (board[row][col] && board[row][col]->player != turn) {
+                        possible_moves[row][col] = board[row][col]->check_piece_possible_moves(*this, attacked_positions, checkin_pieces, pinned_pieces);
+                    }
+                }
+            }
+
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    if (board[row][col] && board[row][col]->player == turn) {
+                        possible_moves[row][col] = board[row][col]->check_piece_possible_moves(*this, attacked_positions, checkin_pieces, pinned_pieces);
+
+                        if (end) {
+                            Piece::Result curr_res = possible_moves[row][col];
+                            if (curr_res.moves.size() || curr_res.attacks.size()) {
+                                end = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
         
         Board() {
             turn = "white";
