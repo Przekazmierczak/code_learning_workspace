@@ -22,7 +22,7 @@ bool Piece::is_not_pinned(
     std::array<int, 2> piece_position,
     std::array<int, 2> move,
     Board& board_class,
-    std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& pinned_pieces
+    PositionMap& pinned_pieces
 ) {
     return (
         player != board_class.turn ||
@@ -34,11 +34,10 @@ bool Piece::is_not_pinned(
     );
 }
 
-std::unordered_set<std::array<int, 2>, PositionHash> Piece::flatting_checkin_pieces(
-    std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& checkin_pieces
+PositionSet Piece::flatting_checkin_pieces(
+    PositionMap& checkin_pieces
 ) {
-    std::unordered_set<std::array<int, 2>, PositionHash> checking_positions;
-
+    PositionSet checking_positions;
     if (checking_positions.size() == 1) {
         for (auto key : checkin_pieces) {
             checking_positions.insert(key.first);
@@ -52,9 +51,9 @@ std::unordered_set<std::array<int, 2>, PositionHash> Piece::flatting_checkin_pie
 
 Piece::Result Piece::check_piece_possible_moves (
     Board& board_class,
-    std::unordered_set<std::array<int, 2>, PositionHash>& attacked_positions,
-    std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& checkin_pieces,
-    std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& pinned_pieces
+    PositionSet& attacked_positions,
+    PositionMap& checkin_pieces,
+    PositionMap& pinned_pieces
 ) {
     Result result;
 

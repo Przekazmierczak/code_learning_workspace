@@ -12,6 +12,17 @@ struct PositionHash {
     }
 };
 
+using PositionSet = std::unordered_set<
+    std::array<int, 2>,
+    PositionHash
+>;
+
+using PositionMap = std::unordered_map<
+    std::array<int, 2>,
+    PositionSet,
+    PositionHash
+>;
+
 class Board;
 
 class Piece {
@@ -24,7 +35,13 @@ class Piece {
         std::string piece;
         std::string player;
 
-        std::unordered_map<char, std::unordered_map<std::string, std::string>> legend = {
+        std::unordered_map<
+            char,
+            std::unordered_map<
+                std::string,
+                std::string
+            >
+        > legend = {
             {'R', {{"piece", "rook"}, {"player", "white"}}},
             {'N', {{"piece", "knight"}, {"player", "white"}}},
             {'B', {{"piece", "bishop"}, {"player", "white"}}},
@@ -53,18 +70,18 @@ class Piece {
             std::array<int, 2> piece_position,
             std::array<int, 2> move,
             Board& board_class,
-            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& pinned_pieces
+            PositionMap& pinned_pieces
         );
 
-        std::unordered_set<std::array<int, 2>, PositionHash> flatting_checkin_pieces(
-            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& checkin_pieces
+        PositionSet flatting_checkin_pieces(
+            PositionMap& checkin_pieces
         );
 
         Result check_piece_possible_moves (
             Board& board_class,
-            std::unordered_set<std::array<int, 2>, PositionHash>& attacked_positions,
-            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& checkin_pieces,
-            std::unordered_map<std::array<int, 2>, std::unordered_set<std::array<int, 2>, PositionHash>, PositionHash>& pinned_pieces
+            PositionSet& attacked_positions,
+            PositionMap& checkin_pieces,
+            PositionMap& pinned_pieces
         );
 };
 
