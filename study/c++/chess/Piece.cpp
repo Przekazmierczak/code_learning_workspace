@@ -145,6 +145,100 @@ Piece::Result Piece::check_piece_possible_moves (
                 }
             }
         }
+
+    } else if (piece == "rook" || piece == "bishop" || piece == "queen") {
+        std::vector<std::array<int, 2>> directions;
+        if (piece == "rook") {
+            directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        } else if (piece == "bishop") {
+            directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        } else if (piece == "queen") {
+            directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        }
+
+        if (opponent) {
+            for (auto direction : directions) {
+                int distance = 1;
+                PositionSet current_direction;
+                bool absolute_pin_check = false;
+                std::array<int, 2> pinned_piece;
+
+                while (true) {
+                    int new_row = row + distance * direction[0];
+                    int new_column = column + distance * direction[1];
+
+                    if (!is_valid_position(new_row, new_column)) {
+                        break;
+                    }
+
+                    if (board_class.board[new_row][new_column]) {
+                        if (board_class.board[new_row][new_column]->player != player && !absolute_pin_check) {
+                            pinned_piece = {new_row, new_column};
+                            attacked_positions.insert({new_row, new_column});
+
+                            if (board_class.board[new_row][new_column]->piece == "king" && board_class.board[new_row][new_column]->player != player) {
+                                checkin_pieces[{row, column}];
+                                int next_row = row + (distance + 1) * direction[0];
+                                int next_column = column + (distance + 1) * direction[1];
+                                if (is_valid_position(next_row, next_column)) {
+                                    attacked_positions.insert({next_row, next_column});
+                                }
+                                break;
+                            } else {
+                                absolute_pin_check = true;
+                            }
+                        } else if (board_class.board[new_row][new_column]->player == player && !absolute_pin_check) {
+                            attacked_positions.insert({new_row, new_column});
+                            break;
+                        } else if (absolute_pin_check) {
+                            if (board_class.board[new_row][new_column]->piece == "king" && board_class.board[new_row][new_column]->player != player) {
+                                pinned_pieces[pinned_piece].insert({row, column});
+                                pinned_pieces[pinned_piece].insert(current_direction.begin(), current_direction.end());
+                            }
+                            break;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        if (!absolute_pin_check) {
+                            attacked_positions.insert({new_row, new_column});
+                        }
+                        current_direction.insert({new_row, new_column});
+                    }
+                    distance++;
+                }
+            }
+        } else {
+            for (auto direction : directions) {
+                int distance = 1;
+                while (true) {
+                    int new_row = row + distance * direction[0];
+                    int new_column = column + distance * direction[1];
+
+                    if (!is_valid_position(new_row, new_column)) {
+                        break;
+                    }
+
+                    if (board_class.board[new_row][new_column]) {
+                        if (board_class.board[new_row][new_column]->player != player) {
+                            if ((is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces))) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.attacks.push_back({new_row, new_column});
+                                }
+                            }
+                        }
+                        break;
+                    } else {
+                        if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
+                            if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                result.moves.push_back({new_row, new_column});
+                            }
+                        }
+                    }
+                    distance++;
+                }
+            }
+        }
     }
     
     return result;
