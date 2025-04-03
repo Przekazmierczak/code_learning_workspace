@@ -239,6 +239,92 @@ Piece::Result Piece::check_piece_possible_moves (
                 }
             }
         }
+    } else if (piece == "knight" || piece == "king") {
+        std::vector<std::array<int, 2>> directions;
+        if (piece == "knight") {
+            directions = {{2, 1}, {-2, 1}, {2, -1}, {-2, -1}, {1, 2}, {-1, 2}, {1, -2}, {-1, -2}};
+        } else if (piece == "king") {
+            directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, -2}, {0, 2}};
+        }
+
+        if (opponent) {
+            for (auto direction : directions) {
+                int new_row = row + direction[0];
+                int new_column = column + direction[1];
+
+                if (is_valid_position(new_row, new_column)) {
+                    if (piece == "knight") {
+                        attacked_positions.insert({new_row, new_column});
+                        if (board_class.board[new_row][new_column] && board_class.board[new_row][new_column]->piece == "king" && board_class.board[new_row][new_column]->player != player) {
+                            checkin_pieces[{row, column}];
+                        }
+                    } else if (piece == "king") {
+                        if (direction == std::array<int, 2> {0, -2} || direction == std::array<int, 2> {0, 2}) {
+                            continue;
+                        }
+                        attacked_positions.insert({new_row, new_column});
+                    }
+                }
+            }
+        } else {
+            for (auto direction : directions) {
+                int new_row = row + direction[0];
+                int new_column = column + direction[1];
+
+                if (is_valid_position(new_row, new_column)) {
+                    if (piece == "knight") {
+                        if (!board_class.board[new_row][new_column]) {
+                            if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.moves.push_back({new_row, new_column});
+                                }
+                            }
+                        } else if (board_class.board[new_row][new_column]->player != player) {
+                            if (is_not_pinned({row, column}, {new_row, new_column}, board_class, pinned_pieces)) {
+                                if (checkin_pieces.empty() || checking_positions.count({new_row, new_column})) {
+                                    result.attacks.push_back({new_row, new_column});
+                                }
+                            }
+                        }
+                    } else if (piece == "king") {
+                        if (direction == std::array<int, 2> {0, -2}) {
+                            if ((player == "white" && board_class.castling[0] == 'K') || (player == "black" && board_class.castling[2] == 'k')) {
+                                if (
+                                    checking_positions.empty() &&
+                                    !board_class.board[row][1] &&
+                                    !board_class.board[row][2] &&
+                                    !attacked_positions.count({row, 1}) &&
+                                    !attacked_positions.count({row, 2})
+                                ) {
+                                    result.moves.push_back({new_row, new_column});
+                                }
+                            }
+                        } else if (direction == std::array<int, 2> {0, 2}) {
+                                if ((player == "white" && board_class.castling[1] == 'Q') || (player == "black" && board_class.castling[3] == 'q')) {
+                                if (
+                                    checking_positions.empty() &&
+                                    !board_class.board[row][4] &&
+                                    !board_class.board[row][5] &&
+                                    !board_class.board[row][6] &&
+                                    !attacked_positions.count({row, 4}) &&
+                                    !attacked_positions.count({row, 5})
+                                ) {
+                                    result.moves.push_back({new_row, new_column});
+                                }
+                            }
+                        } else if (!board_class.board[new_row][new_column]) {
+                            if (!attacked_positions.count({new_row, new_column})) {
+                                result.moves.push_back({new_row, new_column});
+                            }
+                        } else if (board_class.board[new_row][new_column]->player != player) {
+                            if (!attacked_positions.count({new_row, new_column})) {
+                                result.attacks.push_back({new_row, new_column});
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     return result;
