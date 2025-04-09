@@ -9,15 +9,19 @@ class RationalNum:
     liczby, licznika części ułamkowej i mianownika części ułamkowej. W obiekcie informacje
     o liczbie powinny być reprezentowane za pomocą liczb całkowitych int.
     """
-    def __init__(self, whole, numerator=0, denominator=0):
-        # RationalNum(x) create whole numer x
-        if not numerator and not denominator:
+    def __init__(self, whole, numerator=None, denominator=None):
+        # RationalNum(x) creates whole numer x
+        if numerator == None and denominator == None:
             whole -= 1
             numerator, denominator = 1, 1
 
-        # RationalNum(x, y) create x/y
-        elif not denominator:
+        # RationalNum(x, y) creates x/y
+        elif denominator == None:
             whole, numerator, denominator = 0, whole, numerator
+
+        # Error for denominator == 0
+        if denominator == 0:
+            raise ZeroDivisionError
 
         self.numerator, self.denominator = self.change_to_rational(whole, numerator, denominator)
 
@@ -25,7 +29,7 @@ class RationalNum:
         numerator = numerator + whole * denominator
         gcd = math.gcd(numerator, denominator)
         numerator //= gcd
-        denominator = denominator // gcd
+        denominator //= gcd
         return numerator, denominator
 
     def __str__(self):
@@ -107,26 +111,32 @@ class RationalNum:
 
         mul_numerator = self.numerator * other.numerator
         mul_denominator = self.denominator * other.denominator
+
         return RationalNum(mul_numerator, mul_denominator)
     
     def __truediv__(self, other):
         """
         Zwróć iloraz "/".
         """
-        if (isinstance(other, RationalNum)):
-            truediv_numerator = self.numerator * other.denominator
-            truediv_denominator = self.denominator * other.numerator
-        else:
-            truediv_numerator = self.numerator
-            truediv_denominator = self.denominator * int(other)
+        if (isinstance(other, int)):
+            other = RationalNum(other)
+
+        truediv_numerator = self.numerator * other.denominator
+        truediv_denominator = self.denominator * other.numerator
+
         return RationalNum(0, truediv_numerator, truediv_denominator)
     
     def __pow__(self, other):
         """
         Zwróć potegę "**".
         """
-        pow_numerator = self.numerator ** other
-        pow_denominator = self.denominator ** other
+        if other >= 0:
+            pow_numerator = self.numerator ** other
+            pow_denominator = self.denominator ** other
+        else:
+            other = abs(other)
+            pow_numerator = self.denominator ** other
+            pow_denominator = self.numerator ** other
         return RationalNum(0, pow_numerator, pow_denominator)
     
     def __bool__(self):
@@ -145,7 +155,7 @@ class RationalNum:
         """
         Konwertuj do int "int()".
         """
-        return int(self.numerator / self.denominator)
+        return self.numerator // self.denominator
         
 if __name__ == "__main__":
     num1 = RationalNum(2, 3, 6)
@@ -242,6 +252,7 @@ if __name__ == "__main__":
     assert num3 + num4 == RationalNum(8, 4, 5)
     assert num4 + num5 == 13
     assert num1 + 3 == RationalNum(3, 5, 2)
+    assert num3 + 4 == RationalNum(4, 4, 5)
 
     "TEST __mul__()"
     assert num1 * num2 == RationalNum(25, 4)
@@ -251,5 +262,51 @@ if __name__ == "__main__":
     assert num1 * num5 == RationalNum(25, 2)
     assert num3 * num4 == RationalNum(32, 5)
     assert num4 * num5 == 40
+    assert num1 * 2 == 5
+    assert num3 * 3 == RationalNum(12, 5)
 
-    print("Finished all tests.")
+    "TEST __truediv__()"
+    assert num1 / num2 == 1
+    assert num1 / num3 == RationalNum(25, 8)
+    assert num1 / num4 == RationalNum(5, 16)
+    assert num1 / num5 == RationalNum(1, 2)
+    assert num3 / num4 == RationalNum(1, 10)
+    assert num4 / num5 == RationalNum(8, 5)
+    assert num1 / 2 == RationalNum(5, 4)
+    assert num3 / 3 == RationalNum(4, 15)
+
+    "TEST __pow__()"
+    assert num1 ** 0 == 1
+    assert num2 ** 1 == RationalNum(5, 2)
+    assert num3 ** 2 == RationalNum(16, 25)
+    assert num4 ** 3 == RationalNum(512)
+    assert num5 ** 4 == 625
+    assert num3 ** 10 == RationalNum(1048576, 9765625)
+    assert num2 ** -1 == RationalNum(2, 5)
+    assert num3 ** -2 == RationalNum(25, 16)
+
+    "TEST __bool__()"
+    assert bool(num1)
+    assert bool(num2)
+    assert bool(num3)
+    assert bool(num4)
+    assert bool(num5)
+    assert not bool(RationalNum(0))
+    assert not bool(RationalNum(0, 1))
+    assert not bool(RationalNum(0, 0, 1))
+
+    "TEST __float__()"
+    assert float(num1) == 2.5
+    assert float(num2) == 2.5
+    assert float(num3) == 0.8
+    assert float(num4) == 8.0
+    assert float(num5) == 5.0
+
+    "TEST __int__()"
+    assert int(num1) == 2
+    assert int(num2) == 2
+    assert int(num3) == 0
+    assert int(num4) == 8
+    assert int(num5) == 5
+
+    print("All tests have passed.")
