@@ -87,7 +87,7 @@ class Lab7:
         Napisz progam, który w jednym układzie współrzędnych wykreśli rodzinę funkcji.
         """
         x = np.linspace(-2*np.pi, 2*np.pi, 100)
-        for range(1000, 2000, 5)
+        # for range(1000, 2000, 5)
 
 
         # plt.figure()
